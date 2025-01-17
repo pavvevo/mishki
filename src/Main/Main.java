@@ -7,7 +7,7 @@ public class Main {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
-        window.setTitle("Foxing Turns 3D");
+        window.setTitle("Foxing Flips 3D");
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
