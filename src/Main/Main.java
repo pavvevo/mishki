@@ -9,7 +9,14 @@ public class Main {
         window.setResizable(false);
         window.setTitle("Foxing Flips 3D");
 
+        Game game = new Game();
+        window.add(game);
+
+        window.pack();
+
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+
+        game.startGame();
     }
 }
