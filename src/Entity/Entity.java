@@ -30,7 +30,6 @@ public class Entity {
     public void setSprite(BufferedImage sprite) {
         this.sprite = sprite;
         sprite_width = sprite.getWidth();
-        System.out.println(sprite_width);
         sprite_height = sprite.getHeight();
     }
 

@@ -25,7 +25,7 @@ public class Game extends JPanel implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
 
-        player.setup();
+        player.setup(100, 100);
     }
 
     @Override
