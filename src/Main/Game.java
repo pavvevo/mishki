@@ -13,7 +13,7 @@ public class Game extends JPanel implements Runnable {
     final int FPS = 60;
 
     Thread gameThread;
-    Player player = new Player(this);
+    //Player player = new Player(this);
 
     Canvas canvas;
 
@@ -27,7 +27,7 @@ public class Game extends JPanel implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
 
-        player.setup(100, 100);
+      //  player.setup(100, 100);
     }
 
     @Override
@@ -63,13 +63,13 @@ public class Game extends JPanel implements Runnable {
     }
 
     public void update() {
-        player.update();
+      //   player.update();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        player.draw(g2d);
+        //player.draw(g2d);
         g2d.dispose();
     }
 }

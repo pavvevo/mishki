@@ -1,13 +1,13 @@
 package Entity;
 
-import Main.Game;
+import Engine.GameContainer;
 
 import java.awt.*;
 
 public class Player extends Entity {
-    Game game;
+    GameContainer game;
 
-    public Player(Game game) {
+    public Player(GameContainer game) {
         this.game = game;
     }
 

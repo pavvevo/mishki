@@ -1,6 +1,5 @@
-package Game;
+package Engine;
 
-import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferInt;
 
 public class Renderer {
