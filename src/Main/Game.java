@@ -1,5 +1,7 @@
 package Main;
 
+import Entity.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,6 +13,7 @@ public class Game extends JPanel implements Runnable {
     final int FPS = 60;
 
     Thread gameThread;
+    Player player = new Player(this);
 
     public Game() {
         this.setPreferredSize(new Dimension(screen_width, screen_height));
@@ -21,6 +24,8 @@ public class Game extends JPanel implements Runnable {
     public void startGame() {
         gameThread = new Thread(this);
         gameThread.start();
+
+        player.setup();
     }
 
     @Override
@@ -56,12 +61,13 @@ public class Game extends JPanel implements Runnable {
     }
 
     public void update() {
-
+        player.update();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+        player.draw(g2d);
         g2d.dispose();
     }
 }
