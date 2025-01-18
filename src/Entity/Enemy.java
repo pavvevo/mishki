@@ -14,14 +14,22 @@ public class Enemy extends Entity{
     public void setup(int x, int y, String name) {
         this.x = x;
         this.y = y;
-        max_health = 20;
-        health = max_health;
         xscale = 1.5;
         yscale = 0.5;
         scale = game.scale;
         this.name = name;
 
-        getSprite("/Resources/Enemy/mouse.png");
+        switch(name) {
+            default: case "Mouse":
+                getSprite("/Resources/Enemy/mouse.png");
+                max_health = 10;
+                break;
+            case "Tish":
+                //
+                break;
+        }
+
+        health = max_health;
     }
 
     public void update() {
