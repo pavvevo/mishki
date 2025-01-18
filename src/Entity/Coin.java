@@ -6,8 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 
 public class Coin extends Entity {
     public int spin = 0;
@@ -70,8 +69,9 @@ public class Coin extends Entity {
         if(isHovered(game.input)) {
 
             if(spin <= 0) {
-                xscale = 1.25;
-                yscale = 1.25;
+
+
+
 
                 if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
                     spin_coin(60);

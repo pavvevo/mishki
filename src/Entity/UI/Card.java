@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent;
 import static java.lang.Math.sin;
 
 public class Card extends Entity {
-
     Game game;
     Deck my_deck;
 
@@ -72,11 +71,37 @@ public class Card extends Entity {
         sin_timer += 1;
     }
 
+    public boolean isClicked() {
+        if(game.input.isButton(MouseEvent.BUTTON1)) {
+            return true;
+        }
+        return false;
+    }
+
     public void draw(Graphics2D g2d) {
 
         g2d.setColor(Color.WHITE);
         width = (int)(xscale * sprite_width * scale);
         height = (int)(yscale * sprite_height * scale);
         g2d.drawImage(sprite, x * scale - width / 2, (y + (int)y_offset) * scale - height / 2, width, height, null);
+
+        boolean ishov = false;
+        if(isHovered(game.input)) {
+
+            ishov = true;
+            }
+        if(ishov = true) {
+            if(game.input.isButton(MouseEvent.BUTTON1)) {
+                if(my_deck.has_selected) {
+                    if(selected) {
+                        g2d.drawRect(160*scale, 90*scale, 400, -300);
+                    }
+
+                }
+
+                    ishov = false;
+            }
+        }
+
     }
 }
