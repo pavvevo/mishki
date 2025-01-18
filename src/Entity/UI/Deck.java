@@ -2,7 +2,10 @@ package Entity.UI;
 
 import Main.Game;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +15,9 @@ public class Deck {
 
     public boolean has_selected;
     Card selectedCard;
+
+    public double indicator_x;
+    public double lerp_x;
 
     Game game;
 
@@ -33,9 +39,17 @@ public class Deck {
         for(int i = 0; i < size; i++) {
             cards.get(i).update();
         }
+
+        indicator_x = lerp(indicator_x, lerp_x, 0.1);
+    }
+
+
+    public double lerp(double a, double b, double f) {
+        return (a * (1.0 - f)) + (b * f);
     }
 
     public void draw(Graphics2D g2d) {
+
         for(int i = 0; i < size; i++) {
             cards.get(i).draw(g2d);
         }

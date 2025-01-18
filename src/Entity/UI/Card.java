@@ -85,22 +85,14 @@ public class Card extends Entity {
         height = (int)(yscale * sprite_height * scale);
         g2d.drawImage(sprite, x * scale - width / 2, (y + (int)y_offset) * scale - height / 2, width, height, null);
 
-        boolean ishov = false;
-        if(isHovered(game.input)) {
+        if(isHovered(game.input) && !selected && !my_deck.has_selected) {
+            g2d.setColor(Color.BLACK);
+            int rect_width = (320 - 20) * scale;
+            int rect_height = 90 * scale;
 
-            ishov = true;
-            }
-        if(ishov = true) {
-            if(game.input.isButton(MouseEvent.BUTTON1)) {
-                if(my_deck.has_selected) {
-                    if(selected) {
-                        g2d.drawRect(160*scale, 90*scale, 400, -300);
-                    }
+            my_deck.lerp_x = x;
 
-                }
-
-                    ishov = false;
-            }
+            g2d.fillRoundRect(10 * scale, 10 * scale, rect_width, rect_height, 32, 32);
         }
 
     }

@@ -50,6 +50,9 @@ public class Enemy extends Entity{
 
     public void draw(Graphics2D g2d) {
         g2d.setColor(Color.WHITE);
+
+        g2d.drawImage(shadow, x * scale - 48, y * scale, 32 * scale, 16 * scale, null);
+
         width = (int)(xscale * sprite_width * scale);
         height = (int)(yscale * sprite_height * scale);
         g2d.drawImage(sprite, x * scale - width / 2, y * scale - height / 2, width, height, null);

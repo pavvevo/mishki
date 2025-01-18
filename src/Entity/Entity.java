@@ -32,8 +32,7 @@ public class Entity {
 
     public BufferedImage getImg(String path ) {
         try {
-            BufferedImage img = ImageIO.read(getClass().getResourceAsStream(path));
-            return img;
+            return ImageIO.read(getClass().getResourceAsStream(path));
         } catch (IOException e) {
             System.out.println("CANT LOAD");
             return null;
