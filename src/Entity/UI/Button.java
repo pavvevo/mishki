@@ -9,19 +9,15 @@ import java.awt.event.MouseEvent;
 public class Button extends Entity {
 
     Game game;
-    int x, y;
-    int w,h;
 
     public Button(Game game, String name, int x, int y, int w, int h) {
         this.name = name;
         this.game = game;
         this.x = x;
         this.y = y;
-        setSprite(getImg("/Resources/UI/Cards/card.png"));
-
         switch(name) {
-
-            default: case "Attack":
+            default: case "Menu Button":
+                setSprite(getImg("/Resources/UI/Cards/card.png"));
                 break;
         }
     }
@@ -33,20 +29,8 @@ public class Button extends Entity {
         if(isHovered(game.input)) {
             xscale = 1.25;
             yscale = 1.25;
-            System.out.println("nigger");
-            if(game.input.isButton(MouseEvent.BUTTON1)) {
-
-            }
         }
-
     }
-    public boolean isClicked() {
-        if(game.input.isButton(MouseEvent.BUTTON1)) {
-            return true;
-        }
-        return false;
-    }
-
 
     public void draw(Graphics2D g2d) {
         g2d.setColor(Color.WHITE);

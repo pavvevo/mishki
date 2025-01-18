@@ -117,19 +117,20 @@ public class Game extends JPanel implements Runnable {
     public void update() {
         if(has_started) {
             cursor.update();
-            if(State == STATE.GAME) {
-                player.update();
-                enemy.update();
-                coin.update();
 
+            switch(State) {
+                case GAME:
+                    player.update();
+                    enemy.update();
+                    coin.update();
+                    deck.update();
+                break;
 
+                case MENU:
+                    buttonMenu.update();
+                break;
             }
-            else if(State == STATE.MENU) {
-                buttonMenu.update();
-                if(buttonMenu.isClicked() && buttonMenu.isHovered(input)) {
-                    State = STATE.GAME;
-                }
-            }
+
             input.update();
         }
     }
@@ -138,17 +139,18 @@ public class Game extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         if(has_started) {
+            switch(State) {
+                case GAME:
+                    g2d.drawImage(bg, 0, 0, bg.getWidth() * scale, bg.getHeight() * scale, null);
+                    player.draw(g2d);
+                    enemy.draw(g2d);
+                    coin.draw(g2d);
+                    deck.draw(g2d);
+                    break;
 
-
-            if(State == STATE.GAME) {
-                g2d.drawImage(bg, 0, 0, bg.getWidth() * scale, bg.getHeight() * scale, null);
-                player.draw(g2d);
-                enemy.draw(g2d);
-                coin.draw(g2d);
-                deck.draw(g2d);
-            }
-            else if(State == STATE.MENU) {
-                buttonMenu.draw(g2d);
+                case MENU:
+                    buttonMenu.draw(g2d);
+                    break;
             }
             cursor.draw(g2d);
         }
