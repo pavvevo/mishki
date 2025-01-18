@@ -2,6 +2,8 @@ package Entity.UI;
 
 import Main.Game;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+
 import Entity.Entity;
 
 public class Cursor extends Entity {
@@ -17,7 +19,7 @@ public class Cursor extends Entity {
         xscale = 1;
         yscale = 1;
         scale = 3;
-        getSprite("/Resources/cursor_up.png");
+        setSprite(getImg("/Resources/cursor_up.png"));
     }
 
     public  void update() {
@@ -29,6 +31,6 @@ public class Cursor extends Entity {
         g2d.setColor(Color.WHITE);
         int width = (int)(xscale * sprite_width * scale);
         int height = (int)(yscale * sprite_height * scale);
-        g2d.drawImage(getSprite(), x * scale - width / 2, y * scale - height / 2, width, height, null);
+        g2d.drawImage(sprite, x * scale - width / 2, y * scale - height / 2, width, height, null);
     }
 }

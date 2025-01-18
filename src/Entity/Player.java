@@ -19,7 +19,7 @@ public class Player extends Entity {
         yscale = 0.5;
         name = "The Fox";
         scale = game.scale;
-        getSprite("/Resources/Player/player_back.png");
+        setSprite(getImg("/Resources/Player/player_back.png"));
     }
 
     public void update() {
@@ -29,8 +29,8 @@ public class Player extends Entity {
 
     public void draw(Graphics2D g2d) {
         g2d.setColor(Color.WHITE);
-        int width = (int)(xscale * sprite_width * scale);
-        int height = (int)(yscale * sprite_height * scale);
+        width = (int)(xscale * sprite_width * scale);
+        height = (int)(yscale * sprite_height * scale);
         g2d.drawImage(sprite, x * scale - width / 2, y * scale - height / 2, width, height, null);
     }
 }

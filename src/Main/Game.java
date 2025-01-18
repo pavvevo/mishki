@@ -1,5 +1,6 @@
 package Main;
 
+import Entity.Coin;
 import Entity.Enemy;
 import Entity.Player;
 import Entity.UI.Cursor;
@@ -21,6 +22,8 @@ public class Game extends JPanel implements Runnable {
     Cursor cursor;
     public Input input;
 
+    Coin coin;
+
     Player player;
     Enemy enemy;
 
@@ -36,6 +39,8 @@ public class Game extends JPanel implements Runnable {
 
         cursor = new Cursor(this);
         cursor.setup(100,100);
+
+        coin = new Coin(this);
 
         player = new Player(this);
         player.setup(100, 100);
@@ -85,6 +90,7 @@ public class Game extends JPanel implements Runnable {
         if(has_started) {
             player.update();
             enemy.update();
+            coin.update();
             cursor.update();
         }
     }
@@ -95,6 +101,7 @@ public class Game extends JPanel implements Runnable {
         if(has_started) {
             player.draw(g2d);
             enemy.draw(g2d);
+            coin.draw(g2d);
             cursor.draw(g2d);
         }
         g2d.dispose();

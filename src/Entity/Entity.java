@@ -1,8 +1,10 @@
 package Entity;
 
+import Main.Game;
+import Main.Input;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 public class Entity {
@@ -12,24 +14,27 @@ public class Entity {
     public String name;
 
     public int scale;
-    BufferedImage sprite;
+    public BufferedImage sprite;
     public int sprite_width;
     public int sprite_height;
     public double xscale;
     public double yscale;
+    public int width;
+    public int height;
+    Game game;
 
-
-    public void getSprite(String path ) {
+    public BufferedImage getImg(String path ) {
         try {
             BufferedImage img = ImageIO.read(getClass().getResourceAsStream(path));
-            setSprite(img);
+            return img;
         } catch (IOException e) {
             System.out.println("CANT LOAD");
+            return null;
         }
     }
 
-    public void setSprite(BufferedImage sprite) {
-        this.sprite = sprite;
+    public void setSprite(BufferedImage img) {
+        this.sprite = img;
         sprite_width = sprite.getWidth();
         sprite_height = sprite.getHeight();
     }
@@ -38,9 +43,10 @@ public class Entity {
         return (a * (1.0 - f)) + (b * f);
     }
 
+    public boolean isHovered(Input input) {
+        if(input == null) return false;
 
-    //gettter shtotio ne mi dava inache
-    public BufferedImage getSprite() {
-        return sprite;
+        return input.mouse_x > x - width / 2 && input.mouse_x < x + width / 2
+                && input.mouse_y > y - height / 2 && input.mouse_y < y + height / 2;
     }
 }

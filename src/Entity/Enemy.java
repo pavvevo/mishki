@@ -21,7 +21,7 @@ public class Enemy extends Entity{
 
         switch(name) {
             default: case "Mouse":
-                getSprite("/Resources/Enemy/mouse.png");
+                setSprite(getImg("/Resources/Enemy/mouse.png"));
                 max_health = 10;
                 break;
             case "Tish":
@@ -39,8 +39,8 @@ public class Enemy extends Entity{
 
     public void draw(Graphics2D g2d) {
         g2d.setColor(Color.WHITE);
-        int width = (int)(xscale * sprite_width * scale);
-        int height = (int)(yscale * sprite_height * scale);
+        width = (int)(xscale * sprite_width * scale);
+        height = (int)(yscale * sprite_height * scale);
         g2d.drawImage(sprite, x * scale - width / 2, y * scale - height / 2, width, height, null);
     }
 }
