@@ -38,8 +38,8 @@ public class Cursor extends Entity {
         x = game.input.mouse_x + 15;
         y = game.input.mouse_y + 7;
 
-        xscale = lerp(xscale, 1.0, 0.1);
-        yscale = lerp(yscale, 1.0, 0.1);
+        xscale = lerp(xscale, 1.0, 0.2);
+        yscale = lerp(yscale, 1.0, 0.2);
 
         if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
             xscale = 1.25;

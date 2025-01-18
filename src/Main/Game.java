@@ -151,5 +151,6 @@ public class Game extends JPanel implements Runnable {
             cursor.draw(g2d);
         }
         g2d.dispose();
+
     }
 }
