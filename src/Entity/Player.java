@@ -3,11 +3,14 @@ package Entity;
 import Main.Game;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 import static java.lang.Math.sin;
 
 public class Player extends Entity {
     Game game;
+    BufferedImage front_fox;
+    BufferedImage back_fox;
 
     public Player(Game game) {
         this.game = game;
@@ -18,12 +21,13 @@ public class Player extends Entity {
         this.y = y;
         max_health = 20;
         health = max_health;
-        xscale = 1.5;
-        yscale = 0.5;
         name = "The Fox";
         scale = game.scale;
-        setSprite(getImg("/Resources/Player/player_back.png"));
+        back_fox = getImg("/Resources/Player/player_back.png");
+        front_fox = getImg("/Resources/Player/player_front.png");
         shadow = getImg("/Resources/Other/shadow.png");
+
+        setSprite(back_fox);
     }
 
     public void update() {
@@ -35,13 +39,19 @@ public class Player extends Entity {
         if(isHovered(game.input) && game.input.isButtonDown(MouseEvent.BUTTON1)) {
             xscale = 1.25;
             yscale = 0.75;
+
+            if(sprite == front_fox) {
+                setSprite(back_fox);
+            } else if(sprite == back_fox) {
+                setSprite(front_fox);
+            }
         }
     }
 
     public void draw(Graphics2D g2d) {
         g2d.setColor(Color.WHITE);
 
-        g2d.drawImage(shadow, x * scale - 32, y * scale + height - 16, 64 * scale, 32 * scale, null);
+        g2d.drawImage(shadow, x * scale - 64, y * scale + 48, 48 * scale, 24 * scale, null);
 
         width = (int)(xscale * sprite_width * scale);
         height = (int)(yscale * sprite_height * scale);

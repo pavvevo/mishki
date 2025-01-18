@@ -37,6 +37,20 @@ public class Cursor extends Entity {
     public  void update() {
         x = game.input.mouse_x + 15;
         y = game.input.mouse_y + 7;
+
+        xscale = lerp(xscale, 1.0, 0.1);
+        yscale = lerp(yscale, 1.0, 0.1);
+
+        if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
+            xscale = 1.25;
+            yscale = 0.75;
+        }
+
+        if(game.input.isButtonUp(MouseEvent.BUTTON1)) {
+            xscale = 0.75;
+            yscale = 1.25;
+        }
+
         if(!game.input.isButton(MouseEvent.BUTTON1)) {
             setSprite(getImg("/Resources/UI/cursor_up.png"));
         } else {

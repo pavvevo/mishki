@@ -111,6 +111,8 @@ public class Coin extends Entity {
         }
 
         g2d.setColor(Color.WHITE);
+
+        g2d.drawImage(shadow, x * scale, y * scale, 48 * scale, 24 * scale, null);
         width = (int)(xscale * sprite_width * scale);
         height = (int)(yscale * sprite_height * scale);
         g2d.drawImage(sprite, x * scale - width / 2, (y + (int)offset_y) * scale - height / 2, width, height, null);

@@ -63,9 +63,9 @@ public class Game extends JPanel implements Runnable {
         coin = new Coin(this);
         deck = new Deck(this,5);
         cursor.setup(100, 100);
-        enemy.setup(200, 50, "Mouse");
-        player.setup(100, 100);
-        coin.setup(180, 90);
+        enemy.setup(240, 50, "Mouse");
+        player.setup(40, 100);
+        coin.setup(180, 75);
 
         has_started = true;
 

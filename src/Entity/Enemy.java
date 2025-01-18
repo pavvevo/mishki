@@ -25,6 +25,7 @@ public class Enemy extends Entity{
         switch(name) {
             default: case "Mouse":
                 setSprite(getImg("/Resources/Enemy/mouse.png"));
+                shadow = getImg("/Resources/Other/shadow.png");
                 max_health = 10;
                 break;
             case "Tish":
