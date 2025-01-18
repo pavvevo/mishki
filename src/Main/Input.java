@@ -1,14 +1,13 @@
 package Main;
 
 import java.awt.event.*;
-
 public class Input implements MouseListener, MouseMotionListener {
 
     Game game;
 
     final int NUM_BUTTONS = 5;
-    boolean[] buttons = new boolean[NUM_BUTTONS];
-    boolean[] buttonsLast = new boolean[NUM_BUTTONS];
+    public boolean[] buttons = new boolean[NUM_BUTTONS];
+    public boolean[] buttonsLast = new boolean[NUM_BUTTONS];
     public int mouse_x, mouse_y;
 
     public Input(Game game) {
@@ -31,7 +30,9 @@ public class Input implements MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
+
         buttonsLast[e.getButton()] = true;
+       // game.cursor.setSprite(game.cursor.up);
     }
 
     @Override

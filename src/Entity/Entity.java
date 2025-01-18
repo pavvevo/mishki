@@ -12,7 +12,7 @@ public class Entity {
     public String name;
 
     public int scale;
-    BufferedImage sprite;
+    public BufferedImage sprite;
     public int sprite_width;
     public int sprite_height;
     public double xscale;
@@ -39,8 +39,5 @@ public class Entity {
     }
 
 
-    //gettter shtotio ne mi dava inache
-    public BufferedImage getSprite() {
-        return sprite;
-    }
+
 }
