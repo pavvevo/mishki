@@ -3,10 +3,27 @@ package Main;
 import java.awt.event.*;
 
 public class Input implements MouseListener, MouseMotionListener {
-    public Input() {
-        //w
-    }
 
+    Game game;
+
+    final int NUM_BUTTONS = 5;
+    boolean[] buttons = new boolean[NUM_BUTTONS];
+    boolean[] buttonsLast = new boolean[NUM_BUTTONS];
+    int mouse_x, mouse_y;
+
+    public Input(Game game) {
+        this.game = game;
+        mouse_x = 0;
+        mouse_y = 0;
+
+        game.addMouseMotionListener(this);
+        game.addMouseListener(this);
+    }
+    public void update() {
+        for (int i = 0; i < NUM_BUTTONS; i++) {
+            buttonsLast[i] = buttons[i];
+        }
+    }
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -14,12 +31,12 @@ public class Input implements MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        buttonsLast[e.getButton()] = true;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        buttonsLast[e.getButton()] = false;
     }
 
     @Override
@@ -32,13 +49,16 @@ public class Input implements MouseListener, MouseMotionListener {
 
     }
 
+    //    \/ mouse motion listener
     @Override
     public void mouseDragged(MouseEvent e) {
-
+        mouse_x = (int)(e.getX() / game.scale);
+        mouse_y = (int)(e.getY() / game.scale);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
+        mouse_x = (int)(e.getX() / game.scale);
+        mouse_y = (int)(e.getY() / game.scale);
     }
 }
