@@ -52,9 +52,10 @@ public class Entity {
     public boolean isHovered(Input input) {
         if(input == null) return false;
 
-
-        return input.mouse_x > x - sprite_width / 2 && input.mouse_x < x + sprite_width / 2
+        boolean hovered = input.mouse_x > x - sprite_width / 2 && input.mouse_x < x + sprite_width / 2
                 && input.mouse_y > y - sprite_height / 2 && input.mouse_y < y + sprite_height / 2;
+
+        return hovered;
     }
     public boolean isClicked() {
         if(game.input.isButton(MouseEvent.BUTTON1)) {

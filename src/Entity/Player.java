@@ -14,6 +14,7 @@ public class Player extends Entity {
 
     public Player(Game game) {
         this.game = game;
+        System.out.println(this.game);
     }
 
     public void setup(int x, int y) {
@@ -35,6 +36,10 @@ public class Player extends Entity {
         lil_sin = sin(sin_timer / 10) / 20;
         xscale = lerp(xscale, 1.0 + lil_sin, 0.1);
         yscale = lerp(yscale, 1.0 - lil_sin, 0.1);
+
+        if(isHovered(game.input)) {
+            game.setSelectedTarget(this, true);
+        }
 
         if(isHovered(game.input) && game.input.isButtonDown(MouseEvent.BUTTON1)) {
             xscale = 1.25;

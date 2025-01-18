@@ -46,6 +46,10 @@ public class Enemy extends Entity{
             xscale = 1.25;
             yscale = 0.75;
         }
+
+        if(isHovered(game.input)) {
+            game.setSelectedTarget(this, false);
+        }
     }
 
     public void draw(Graphics2D g2d) {
