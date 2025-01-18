@@ -19,6 +19,8 @@ public class Button extends Entity {
             default: case "Menu Button":
                 setSprite(getImg("/Resources/UI/Cards/card.png"));
                 break;
+            case "Hui":
+                setSprite(getImg("/Resources/UI/cursor_down.png"));
         }
     }
 
@@ -29,6 +31,18 @@ public class Button extends Entity {
         if(isHovered(game.input)) {
             xscale = 1.25;
             yscale = 1.25;
+
+            if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
+                switch(name) {
+                    default: case "Menu Button":
+                        game.State = game.State.GAME;
+                        break;
+                    case "Hui":
+                        System.out.println("Hui");
+                        break;
+                }
+
+            }
         }
     }
 

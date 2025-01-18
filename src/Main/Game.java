@@ -57,7 +57,6 @@ public class Game extends JPanel implements Runnable {
         input = new Input(this);
         buttonMenu = new Button(this, "Main Menu", 100, 50, 5, 2);
 
-
         cursor = new Cursor(this);
         enemy = new Enemy(this);
         player = new Player(this);
@@ -67,14 +66,6 @@ public class Game extends JPanel implements Runnable {
         enemy.setup(200, 50, "Mouse");
         player.setup(100, 100);
         coin.setup(180, 90);
-
-
-
-
-
-
-
-
 
         has_started = true;
 

@@ -15,6 +15,7 @@ public class Entity {
     public String name;
 
     public int scale = 3;
+    public BufferedImage shadow;
     public BufferedImage sprite;
     public int sprite_width;
     public int sprite_height;
