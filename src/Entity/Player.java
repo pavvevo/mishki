@@ -41,15 +41,23 @@ public class Player extends Entity {
             game.setSelectedTarget(this, true);
         }
 
+        if(game.turn) {
+            if(sprite == back_fox) {
+                xscale = 1.25;
+                yscale = 0.75;
+            }
+            setSprite(front_fox);
+        } else {
+            if(sprite == front_fox) {
+                xscale = 1.25;
+                yscale = 0.75;
+            }
+            setSprite(back_fox);
+        }
+
         if(isHovered(game.input) && game.input.isButtonDown(MouseEvent.BUTTON1)) {
             xscale = 1.25;
             yscale = 0.75;
-
-            if(sprite == front_fox) {
-                setSprite(back_fox);
-            } else if(sprite == back_fox) {
-                setSprite(front_fox);
-            }
         }
     }
 

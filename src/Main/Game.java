@@ -26,7 +26,7 @@ public class Game extends JPanel implements Runnable {
         MAP,
         SHOP
     }
-    public STATE State = STATE.MAP;
+    public STATE State = STATE.MENU;
 
     final int FPS = 60;
 
@@ -34,15 +34,16 @@ public class Game extends JPanel implements Runnable {
     boolean has_started = false;
 
     //neshta
+    Button buttonMenu;
+
     BufferedImage bg;
 
     Cursor cursor;
     public Input input;
     public Deck deck;
     Coin coin;
-    Button buttonMenu;
     Player player;
-    Enemy enemy;
+    public Enemy enemy;
     Map map;
 
     public Entity selected_target;
@@ -50,6 +51,7 @@ public class Game extends JPanel implements Runnable {
 
     public int tails_mana = 0;
     public int heads_mana = 0;
+    public boolean turn = true;
     public int max_tosses = 3;
     public int tosses = max_tosses;
 
@@ -70,9 +72,8 @@ public class Game extends JPanel implements Runnable {
         } catch (IOException e) {
             System.out.println("CANT LOAD BACKGROUND");
         }
-
-        input = new Input(this);
         buttonMenu = new Button(this, "Main Menu", 100, 50, 5, 2);
+        input = new Input(this);
         map = new Map(this);
         cursor = new Cursor(this);
         enemy = new Enemy(this);
