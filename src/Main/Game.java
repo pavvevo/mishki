@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import Entity.UI.Nodes.Map;
 
 public class Game extends JPanel implements Runnable {
     public final int scale = 3;
@@ -21,9 +22,11 @@ public class Game extends JPanel implements Runnable {
 
     public enum STATE {
         GAME,
-        MENU
+        MENU,
+        MAP,
+        SHOP
     }
-    public STATE State = STATE.MENU;
+    public STATE State = STATE.MAP;
 
     final int FPS = 60;
 
@@ -40,6 +43,7 @@ public class Game extends JPanel implements Runnable {
     Button buttonMenu;
     Player player;
     Enemy enemy;
+    Map map;
 
     public Entity selected_target;
     public boolean is_target_player = false;
@@ -68,7 +72,7 @@ public class Game extends JPanel implements Runnable {
 
         input = new Input(this);
         buttonMenu = new Button(this, "Main Menu", 100, 50, 5, 2);
-
+        map = new Map(this);
         cursor = new Cursor(this);
         enemy = new Enemy(this);
         player = new Player(this);
@@ -78,6 +82,7 @@ public class Game extends JPanel implements Runnable {
         enemy.setup(240, 50, "Mouse");
         player.setup(40, 100);
         coin.setup(160, 75);
+        map.setup();
 
         has_started = true;
 
@@ -138,6 +143,9 @@ public class Game extends JPanel implements Runnable {
                 case MENU:
                     buttonMenu.update();
                 break;
+                case MAP:
+                    map.update();
+
             }
 
             input.update();
@@ -160,6 +168,8 @@ public class Game extends JPanel implements Runnable {
                 case MENU:
                     buttonMenu.draw(g2d);
                     break;
+                case MAP:
+                    map.draw(g2d);
             }
             cursor.draw(g2d);
         }
