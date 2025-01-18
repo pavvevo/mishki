@@ -50,7 +50,8 @@ public class Game extends JPanel implements Runnable {
 
     public int tails_mana = 0;
     public int heads_mana = 0;
-    public int spins = 3;
+    public int max_tosses = 3;
+    public int tosses = max_tosses;
 
     public Game() {
         this.setPreferredSize(new Dimension(screen_width, screen_height));

@@ -46,11 +46,13 @@ public class Coin extends Entity {
     }
 
     public void spin_coin(int spin) {
-        tosses -= 1;
-        this.spin = spin;
-        spin_speed = 0.25;
-        xscale = 1.5;
-        vsp = -5.0;
+        if(game.tosses > 0) {
+            game.tosses -= 1;
+            this.spin = spin;
+            spin_speed = 0.25;
+            xscale = 1.5;
+            vsp = -5.0;
+        }
     }
 
     public void update() {
