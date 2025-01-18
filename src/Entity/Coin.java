@@ -24,9 +24,6 @@ public class Coin extends Entity {
     BufferedImage heads_icon;
     BufferedImage tails_icon;
 
-    public int max_tosses = 3;
-    public int tosses = max_tosses;
-
     Random rand;
     Game game;
 
