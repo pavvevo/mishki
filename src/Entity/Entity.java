@@ -4,6 +4,7 @@ import Main.Game;
 import Main.Input;
 
 import javax.imageio.ImageIO;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -51,7 +52,14 @@ public class Entity {
     public boolean isHovered(Input input) {
         if(input == null) return false;
 
+
         return input.mouse_x > x - sprite_width / 2 && input.mouse_x < x + sprite_width / 2
                 && input.mouse_y > y - sprite_height / 2 && input.mouse_y < y + sprite_height / 2;
+    }
+    public boolean isClicked() {
+        if(game.input.isButton(MouseEvent.BUTTON1)) {
+            return true;
+        }
+        return false;
     }
 }

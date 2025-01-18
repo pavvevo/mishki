@@ -3,9 +3,10 @@ package Main;
 import Entity.Coin;
 import Entity.Enemy;
 import Entity.Player;
+import Entity.UI.Card;
 import Entity.UI.Cursor;
+import Entity.UI.Button;
 import Entity.UI.Deck;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,12 @@ public class Game extends JPanel implements Runnable {
     public final int screen_width = 320 * scale;
     public final int screen_height = 180 * scale;
 
+    public enum STATE {
+        GAME,
+        MENU
+    }
+    public STATE State = STATE.MENU;
+
     final int FPS = 60;
 
     Thread gameThread;
@@ -27,13 +34,11 @@ public class Game extends JPanel implements Runnable {
 
     Cursor cursor;
     public Input input;
-
+    Deck deck;
     Coin coin;
-
+    Button buttonMenu;
     Player player;
     Enemy enemy;
-
-    Deck deck;
 
     public Game() {
         this.setPreferredSize(new Dimension(screen_width, screen_height));
@@ -50,20 +55,26 @@ public class Game extends JPanel implements Runnable {
         }
 
         input = new Input(this);
+        buttonMenu = new Button(this, "Main Menu", 100, 50, 5, 2);
+
 
         cursor = new Cursor(this);
-        cursor.setup(100,100);
-
-        coin = new Coin(this);
-        coin.setup(160,70);
-
-        deck = new Deck(this,5);
-
-        player = new Player(this);
-        player.setup(40, 120);
-
         enemy = new Enemy(this);
-        enemy.setup(225, 75, "Mouse");
+        player = new Player(this);
+        coin = new Coin(this);
+        deck = new Deck(this,5);
+        cursor.setup(100, 100);
+        enemy.setup(200, 50, "Mouse");
+        player.setup(100, 100);
+        coin.setup(180, 90);
+
+
+
+
+
+
+
+
 
         has_started = true;
 
@@ -105,12 +116,20 @@ public class Game extends JPanel implements Runnable {
 
     public void update() {
         if(has_started) {
-            player.update();
-            enemy.update();
-            coin.update();
             cursor.update();
-            deck.update();
+            if(State == STATE.GAME) {
+                player.update();
+                enemy.update();
+                coin.update();
 
+
+            }
+            else if(State == STATE.MENU) {
+                buttonMenu.update();
+                if(buttonMenu.isClicked() && buttonMenu.isHovered(input)) {
+                    State = STATE.GAME;
+                }
+            }
             input.update();
         }
     }
@@ -119,11 +138,18 @@ public class Game extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         if(has_started) {
-            g2d.drawImage(bg, 0, 0, bg.getWidth() * scale, bg.getHeight() * scale, null);
-            player.draw(g2d);
-            enemy.draw(g2d);
-            coin.draw(g2d);
-            deck.draw(g2d);
+
+
+            if(State == STATE.GAME) {
+                g2d.drawImage(bg, 0, 0, bg.getWidth() * scale, bg.getHeight() * scale, null);
+                player.draw(g2d);
+                enemy.draw(g2d);
+                coin.draw(g2d);
+                deck.draw(g2d);
+            }
+            else if(State == STATE.MENU) {
+                buttonMenu.draw(g2d);
+            }
             cursor.draw(g2d);
         }
         g2d.dispose();
