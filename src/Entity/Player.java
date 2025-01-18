@@ -1,13 +1,12 @@
 package Entity;
 
-import Engine.GameContainer;
-
+import Main.Game;
 import java.awt.*;
 
 public class Player extends Entity {
-    GameContainer game;
+    Game game;
 
-    public Player(GameContainer game) {
+    public Player(Game game) {
         this.game = game;
     }
 
@@ -19,7 +18,7 @@ public class Player extends Entity {
         xscale = 1.5;
         yscale = 0.5;
         scale = 3;
-        getSprite("/Resources/player.png");
+        getSprite("/Resources/Player/player_back.png");
     }
 
     public void update() {
