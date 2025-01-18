@@ -37,4 +37,10 @@ public class Entity {
     {
         return (a * (1.0 - f)) + (b * f);
     }
+
+
+    //gettter shtotio ne mi dava inache
+    public BufferedImage getSprite() {
+        return sprite;
+    }
 }

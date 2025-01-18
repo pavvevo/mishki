@@ -9,7 +9,7 @@ public class Input implements MouseListener, MouseMotionListener {
     final int NUM_BUTTONS = 5;
     boolean[] buttons = new boolean[NUM_BUTTONS];
     boolean[] buttonsLast = new boolean[NUM_BUTTONS];
-    int mouse_x, mouse_y;
+    public int mouse_x, mouse_y;
 
     public Input(Game game) {
         this.game = game;
@@ -61,4 +61,7 @@ public class Input implements MouseListener, MouseMotionListener {
         mouse_x = (int)(e.getX() / game.scale);
         mouse_y = (int)(e.getY() / game.scale);
     }
+
+
+
 }
