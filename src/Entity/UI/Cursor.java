@@ -3,12 +3,17 @@ package Entity.UI;
 import Main.Game;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+
 
 import Entity.Entity;
 
+import javax.imageio.ImageIO;
+
 public class Cursor extends Entity {
     Game game;
-
+    BufferedImage up;
+    BufferedImage down;
     public Cursor(Game game) {
         this.game = game;
     }
@@ -19,12 +24,25 @@ public class Cursor extends Entity {
         xscale = 1;
         yscale = 1;
         scale = 3;
-        setSprite(getImg("/Resources/cursor_up.png"));
+        try {
+             up = ImageIO.read(getClass().getResourceAsStream("/Resources/cursor_up.png"));
+             down = ImageIO.read(getClass().getResourceAsStream("/Resources/cursor_up.png"));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public  void update() {
-        x = game.input.mouse_x + 16;
-        y = game.input.mouse_y + 9;
+        x = game.input.mouse_x + 15;
+        y = game.input.mouse_y + 7;
+        if(!game.input.buttonsLast[1]) {
+
+            setSprite(getImg("/Resources/cursor_up.png"));
+        }
+        else {
+            setSprite(getImg("/Resources/cursor_down.png"));
+        }
     }
 
     public void draw(Graphics2D g2d) {

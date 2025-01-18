@@ -1,5 +1,6 @@
 package Main;
 
+import java.awt.*;
 import java.awt.event.*;
 
 public class Input implements MouseListener, MouseMotionListener {
@@ -8,8 +9,15 @@ public class Input implements MouseListener, MouseMotionListener {
 
     final int NUM_BUTTONS = 5;
     public boolean[] buttons = new boolean[NUM_BUTTONS];
-    boolean[] buttonsLast = new boolean[NUM_BUTTONS];
+    public boolean[] buttonsLast = new boolean[NUM_BUTTONS];
     public int mouse_x, mouse_y;
+
+
+
+
+
+
+
 
     public Input(Game game) {
         this.game = game;
