@@ -6,8 +6,11 @@ import Entity.Player;
 import Entity.UI.Cursor;
 import Entity.UI.Deck;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class Game extends JPanel implements Runnable {
     public final int scale = 3;
@@ -20,6 +23,8 @@ public class Game extends JPanel implements Runnable {
     boolean has_started = false;
 
     //neshta
+    BufferedImage bg;
+
     Cursor cursor;
     public Input input;
 
@@ -37,6 +42,12 @@ public class Game extends JPanel implements Runnable {
     }
 
     public void startGame() {
+
+        try {
+            bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/bg.png"));
+        } catch (IOException e) {
+            System.out.println("CANT LOAD BACKGROUND");
+        }
 
         input = new Input(this);
 
@@ -108,10 +119,11 @@ public class Game extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         if(has_started) {
+            g2d.drawImage(bg, 0, 0, bg.getWidth() * scale, bg.getHeight() * scale, null);
             player.draw(g2d);
             enemy.draw(g2d);
-            deck.draw(g2d);
             coin.draw(g2d);
+            deck.draw(g2d);
             cursor.draw(g2d);
         }
         g2d.dispose();

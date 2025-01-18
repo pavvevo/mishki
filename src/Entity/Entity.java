@@ -19,6 +19,8 @@ public class Entity {
     public int sprite_height;
     public double xscale = 1.0;
     public double yscale = 1.0;
+    public double target_xscale = 1.0;
+    public double target_yscale = 1.0;
     public int width;
     public int height;
     Game game;
