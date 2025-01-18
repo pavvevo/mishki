@@ -4,6 +4,7 @@ import Entity.Coin;
 import Entity.Enemy;
 import Entity.Player;
 import Entity.UI.Cursor;
+import Entity.UI.Deck;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +28,8 @@ public class Game extends JPanel implements Runnable {
     Player player;
     Enemy enemy;
 
+    Deck deck;
+
     public Game() {
         this.setPreferredSize(new Dimension(screen_width, screen_height));
         this.setBackground(Color.GRAY);
@@ -41,13 +44,15 @@ public class Game extends JPanel implements Runnable {
         cursor.setup(100,100);
 
         coin = new Coin(this);
-        coin.setup(180,90);
+        coin.setup(160,70);
+
+        deck = new Deck(this,5);
 
         player = new Player(this);
-        player.setup(100, 100);
+        player.setup(40, 120);
 
         enemy = new Enemy(this);
-        enemy.setup(200, 50, "Mouse");
+        enemy.setup(225, 75, "Mouse");
 
         has_started = true;
 
@@ -93,6 +98,7 @@ public class Game extends JPanel implements Runnable {
             enemy.update();
             coin.update();
             cursor.update();
+            deck.update();
 
             input.update();
         }
@@ -104,6 +110,7 @@ public class Game extends JPanel implements Runnable {
         if(has_started) {
             player.draw(g2d);
             enemy.draw(g2d);
+            deck.draw(g2d);
             coin.draw(g2d);
             cursor.draw(g2d);
         }

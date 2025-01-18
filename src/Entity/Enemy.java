@@ -3,6 +3,9 @@ package Entity;
 import Main.Game;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+
+import static java.lang.Math.sin;
 
 public class Enemy extends Entity{
     Game game;
@@ -33,8 +36,15 @@ public class Enemy extends Entity{
     }
 
     public void update() {
-        xscale = lerp(xscale, 1.0, 0.1);
-        yscale = lerp(yscale, 1.0, 0.1);
+        sin_timer += 1;
+        lil_sin = sin(sin_timer / 10) / 20;
+        xscale = lerp(xscale, 1.0 - lil_sin, 0.1);
+        yscale = lerp(yscale, 1.0 + lil_sin, 0.1);
+
+        if(isHovered(game.input) && game.input.isButtonDown(MouseEvent.BUTTON1)) {
+            xscale = 1.25;
+            yscale = 0.75;
+        }
     }
 
     public void draw(Graphics2D g2d) {

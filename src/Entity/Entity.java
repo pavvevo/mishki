@@ -23,6 +23,9 @@ public class Entity {
     public int height;
     Game game;
 
+    public double lil_sin = 0;
+    public double sin_timer = 0;
+
     public BufferedImage getImg(String path ) {
         try {
             BufferedImage img = ImageIO.read(getClass().getResourceAsStream(path));
@@ -46,7 +49,7 @@ public class Entity {
     public boolean isHovered(Input input) {
         if(input == null) return false;
 
-        return input.mouse_x > x - width / 4 && input.mouse_x < x + width / 4
-                && input.mouse_y > y - height / 4 && input.mouse_y < y + height / 4;
+        return input.mouse_x > x - sprite_width / 2 && input.mouse_x < x + sprite_width / 2
+                && input.mouse_y > y - sprite_height / 2 && input.mouse_y < y + sprite_height / 2;
     }
 }

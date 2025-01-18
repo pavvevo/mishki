@@ -2,6 +2,7 @@ package Entity.UI;
 
 import Main.Game;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -25,8 +26,8 @@ public class Cursor extends Entity {
         yscale = 1;
         scale = 3;
         try {
-             up = ImageIO.read(getClass().getResourceAsStream("/Resources/cursor_up.png"));
-             down = ImageIO.read(getClass().getResourceAsStream("/Resources/cursor_up.png"));
+             up = ImageIO.read(getClass().getResourceAsStream("/Resources/UI/cursor_up.png"));
+             down = ImageIO.read(getClass().getResourceAsStream("/Resources/UI/cursor_up.png"));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -36,12 +37,10 @@ public class Cursor extends Entity {
     public  void update() {
         x = game.input.mouse_x + 15;
         y = game.input.mouse_y + 7;
-        if(!game.input.buttonsLast[1]) {
-
-            setSprite(getImg("/Resources/cursor_up.png"));
-        }
-        else {
-            setSprite(getImg("/Resources/cursor_down.png"));
+        if(!game.input.isButton(MouseEvent.BUTTON1)) {
+            setSprite(getImg("/Resources/UI/cursor_up.png"));
+        } else {
+            setSprite(getImg("/Resources/UI/cursor_down.png"));
         }
     }
 

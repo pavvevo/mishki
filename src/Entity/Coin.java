@@ -22,8 +22,10 @@ public class Coin extends Entity {
     public BufferedImage heads;
     public BufferedImage tails;
 
-    Random rand;
+    public int max_tosses = 3;
+    public int tosses = max_tosses;
 
+    Random rand;
     Game game;
 
     public Coin(Game game) {
@@ -41,6 +43,7 @@ public class Coin extends Entity {
     }
 
     public void spin_coin(int spin) {
+        tosses -= 1;
         this.spin = spin;
         spin_speed = 0.25;
         xscale = 1.5;
