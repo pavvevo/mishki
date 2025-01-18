@@ -9,6 +9,7 @@ public class Entity {
     public int x, y;
     public int max_health;
     public int health;
+    public String name;
 
     public int scale;
     BufferedImage sprite;
@@ -23,7 +24,7 @@ public class Entity {
             BufferedImage img = ImageIO.read(getClass().getResourceAsStream(path));
             setSprite(img);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("CANT LOAD");
         }
     }
 
@@ -33,8 +34,7 @@ public class Entity {
         sprite_height = sprite.getHeight();
     }
 
-    public double lerp(double a, double b, double f)
-    {
+    public double lerp(double a, double b, double f) {
         return (a * (1.0 - f)) + (b * f);
     }
 
