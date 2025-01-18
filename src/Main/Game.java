@@ -13,9 +13,10 @@ public class Game extends JPanel implements Runnable {
     final int FPS = 60;
 
     Thread gameThread;
-
+    Input input;
     //neshta
     Player player;
+    Cursor cursor;
 
     public Game() {
         this.setPreferredSize(new Dimension(screen_width, screen_height));
@@ -24,11 +25,14 @@ public class Game extends JPanel implements Runnable {
     }
 
     public void startGame() {
+        input = new Input(this);
+        
+        cursor = new Cursor(this);
+        player = new Player(this);
+        cursor.setup(100,100);
+        player.setup(100, 100);
         gameThread = new Thread(this);
         gameThread.start();
-
-        player = new Player(this);
-        player.setup(100, 100);
     }
 
     @Override
@@ -72,5 +76,9 @@ public class Game extends JPanel implements Runnable {
         Graphics2D g2d = (Graphics2D) g;
         player.draw(g2d);
         g2d.dispose();
+    }
+
+    public Object getInput() {
+        return input;
     }
 }
