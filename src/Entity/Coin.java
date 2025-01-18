@@ -21,6 +21,9 @@ public class Coin extends Entity {
     public BufferedImage heads;
     public BufferedImage tails;
 
+    BufferedImage heads_icon;
+    BufferedImage tails_icon;
+
     public int max_tosses = 3;
     public int tosses = max_tosses;
 
@@ -40,6 +43,9 @@ public class Coin extends Entity {
         setSprite(heads);
         shadow = getImg("/Resources/Other/shadow.png");
         rand = new Random();
+
+        heads_icon = getImg("/Resources/UI/Cards/notches_heads.png");
+        tails_icon = getImg("/Resources/UI/Cards/notches_tails.png");
     }
 
     public void spin_coin(int spin) {
@@ -56,9 +62,13 @@ public class Coin extends Entity {
             vsp += gravity;
             offset_y += vsp;
             if (offset_y > 0) {
-
                 side = rand.nextInt(2);
 
+                if(side == 0) {
+                    game.tails_mana += 1;
+                } else {
+                    game.heads_mana += 1;
+                }
 
                 offset_y = 0;
                 xscale = 0.75;
@@ -70,10 +80,6 @@ public class Coin extends Entity {
         if(isHovered(game.input)) {
 
             if(spin <= 0) {
-
-
-
-
                 if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
                     spin_coin(60);
                 }
@@ -104,7 +110,6 @@ public class Coin extends Entity {
     }
 
     public void draw(Graphics2D g2d) {
-
         if(side == 0) {
             setSprite(tails);
         } else {
@@ -123,5 +128,14 @@ public class Coin extends Entity {
         width = (int)(xscale * sprite_width * scale);
         height = (int)(yscale * sprite_height * scale);
         g2d.drawImage(sprite, x * scale - width / 2, (y + (int)offset_y) * scale - height / 2, width, height, null);
+
+        //UI
+        for(int i = 0; i < game.heads_mana; i++) {
+            g2d.drawImage(heads_icon, (int)(10 * scale + scale * i * (heads_icon.getWidth() + 2)), 10 * scale, heads_icon.getWidth() * scale, heads_icon.getHeight() * scale, null);
+        }
+
+        for(int i = 0; i < game.tails_mana; i++) {
+            g2d.drawImage(tails_icon, (int)(10 * scale + scale * i * (tails_icon.getWidth() + 2)), 12 * scale + tails_icon.getHeight() * scale, tails_icon.getWidth() * scale, tails_icon.getHeight() * scale, null);
+        }
     }
 }

@@ -7,12 +7,15 @@ import javax.imageio.ImageIO;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 
 public class Entity {
     public int x, y;
     public int max_health;
     public int health;
+    public int block = 0;
     public String name;
+    public double shake;
 
     public int scale = 3;
     public BufferedImage shadow;

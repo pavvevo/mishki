@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import static java.lang.Math.atan2;
 import static java.lang.Math.sin;
 
 public class Card extends Entity {
@@ -25,7 +26,9 @@ public class Card extends Entity {
     BufferedImage tails_icon;
 
     BufferedImage target_enemy_icon;
-    BufferedImage test2;
+    BufferedImage target_player_icon;
+    BufferedImage enemy_arrow;
+    BufferedImage player_arrow;
 
     BufferedImage card_icon;
 
@@ -34,6 +37,9 @@ public class Card extends Entity {
     public int cost_tails = 0;
     public boolean cast_on_self = false;
     public boolean cast_on_enemy = false;
+
+    public int damage = 0;
+    public int block = 0;
 
     public double timer;
 
@@ -46,8 +52,10 @@ public class Card extends Entity {
 
         heads_icon = getImg("/Resources/UI/Cards/notches_heads.png");
         tails_icon = getImg("/Resources/UI/Cards/notches_tails.png");
-        target_enemy_icon = getImg("/Resources/UI/target_enemy.png");
-
+        target_enemy_icon = getImg("/Resources/UI/enemy_target.png");
+        target_player_icon = getImg("/Resources/UI/player_target.png");
+        enemy_arrow = getImg("/Resources/UI/enemy_arrow.png");
+        player_arrow = getImg("/Resources/UI/player_arrow.png");
     }
 
     public void setCardType(String cardType) {
@@ -59,6 +67,7 @@ public class Card extends Entity {
             case "Rock Throw":
                 cost_heads = 1;
                 card_icon = getImg("/Resources/UI/Cards/card_rock_throw.png");
+                damage = 2;
                 cast_on_enemy = true;
                 break;
             case "Tail Defence":
@@ -70,7 +79,35 @@ public class Card extends Entity {
     }
 
     public void update() {
+        casting();
         visual();
+    }
+
+    public void casting() {
+        if(selectable && game.input.isButtonUp(MouseEvent.BUTTON1)) {
+            if(game.tails_mana >= cost_tails && game.heads_mana >= cost_heads) {
+                boolean can_target = game.selected_target != null;
+
+                if (!game.is_target_player && !cast_on_enemy) {
+                    can_target = false;
+                }
+                if (game.is_target_player && !cast_on_self) {
+                    can_target = false;
+                }
+
+                if (can_target) {
+
+                    if (!game.is_target_player) {
+                        castOnEnemy(game.selected_target);
+                    } else {
+                        castOnSelf(game.selected_target);
+                    }
+
+                    game.tails_mana -= cost_tails;
+                    game.heads_mana -= cost_heads;
+                }
+            }
+        }
     }
 
     public void visual() {
@@ -127,28 +164,32 @@ public class Card extends Entity {
         return false;
     }
 
+    public void castOnEnemy(Entity target) {
+            switch(name) {
+                case "Rock Throw":
+                    target.health -= damage;
+                    target.xscale = 1.5;
+                    target.yscale = 0.5;
+                    target.shake = 10;
+                    break;
+            }
+    }
+
+    public void castOnSelf(Entity target) {
+        switch(name) {
+            case"Tail Defence":
+                target.block += 5;
+                target.yscale = 1.25;
+                target.xscale = 0.75;
+                break;
+        }
+    }
+
     public void draw(Graphics2D g2d) {
 
+        //samata karta
         width = (int)(xscale * sprite_width * scale);
         height = (int)(yscale * sprite_height * scale);
-
-        if(selected) {
-            if(game.selected_target != null) {
-                timer += 0.01;
-
-                BufferedImage target_icon = target_enemy_icon;
-
-                int target_width = target_icon.getWidth() * scale;
-                int target_height = target_icon.getHeight() * scale;
-                int target_x = game.selected_target.x * scale;
-                int target_y = game.selected_target.y * scale;
-                g2d.rotate(timer, target_x, target_y);
-                g2d.drawImage(target_icon, target_x - target_width / 2, target_y - target_height / 2, target_width, target_height, null);
-                g2d.rotate(-timer, target_x, target_y);
-            }
-        }
-
-        //samata karta
         g2d.setColor(Color.WHITE);
         g2d.drawImage(sprite, x * scale - width / 2, (y + (int)y_offset) * scale - height / 2, width, height, null);
 
@@ -156,6 +197,40 @@ public class Card extends Entity {
         height = (int)(yscale * card_icon.getHeight() * scale);
 
         g2d.drawImage(card_icon, x * scale - width / 2, (y + (int)y_offset) * scale - height / 2, width, height, null);
+
+        if(selected) {
+            boolean show_target = game.selected_target != null;
+
+            BufferedImage target_icon = target_enemy_icon;
+            if(game.is_target_player) target_icon = target_player_icon;
+
+            if(!game.is_target_player && !cast_on_enemy) { show_target = false; }
+            if(game.is_target_player && !cast_on_self) { show_target = false; }
+
+            BufferedImage target_arrow = enemy_arrow;
+            if(cast_on_self) target_arrow = player_arrow;
+
+            int arrow_x = x * scale - target_arrow.getWidth();
+            int arrow_y = y * scale - height;
+            int target_x = game.input.mouse_x * scale;
+            int target_y = game.input.mouse_y * scale;
+
+            g2d.rotate(atan2(arrow_y - target_y, arrow_x - target_x) - 1.5708, x * scale + target_arrow.getWidth() / 2, arrow_y + target_arrow.getHeight());
+            g2d.drawImage(target_arrow, arrow_x, arrow_y - target_arrow.getHeight(), enemy_arrow.getWidth() * scale, target_arrow.getHeight() * scale, null);
+            g2d.rotate(-atan2(arrow_y - target_y, arrow_x - target_x) + 1.5708, x * scale + target_arrow.getWidth() / 2, arrow_y + target_arrow.getHeight());
+
+            if(show_target) {
+                timer += 0.01;
+
+                int target_width = target_icon.getWidth() * scale;
+                int target_height = target_icon.getHeight() * scale;
+                int mouse_x = game.selected_target.x * scale;
+                int mouse_y = game.selected_target.y * scale;
+                g2d.rotate(timer, target_x, target_y);
+                g2d.drawImage(target_icon, target_x - target_width / 2, target_y - target_height / 2, target_width, target_height, null);
+                g2d.rotate(-timer, target_x, target_y);
+            }
+        }
 
         //notchove
         int offset_x = -(int)((tails_icon.getWidth() * scale + scale) * (cost_tails + cost_heads) / 2);

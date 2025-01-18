@@ -44,6 +44,10 @@ public class Game extends JPanel implements Runnable {
     public Entity selected_target;
     public boolean is_target_player = false;
 
+    public int tails_mana = 0;
+    public int heads_mana = 0;
+    public int spins = 3;
+
     public Game() {
         this.setPreferredSize(new Dimension(screen_width, screen_height));
         this.setBackground(Color.GRAY);
