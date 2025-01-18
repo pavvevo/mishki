@@ -13,12 +13,12 @@ public class Entity {
     public int health;
     public String name;
 
-    public int scale;
+    public int scale = 3;
     public BufferedImage sprite;
     public int sprite_width;
     public int sprite_height;
-    public double xscale;
-    public double yscale;
+    public double xscale = 1.0;
+    public double yscale = 1.0;
     public int width;
     public int height;
     Game game;
@@ -46,7 +46,7 @@ public class Entity {
     public boolean isHovered(Input input) {
         if(input == null) return false;
 
-        return input.mouse_x > x - width / 2 && input.mouse_x < x + width / 2
-                && input.mouse_y > y - height / 2 && input.mouse_y < y + height / 2;
+        return input.mouse_x > x - width / 4 && input.mouse_x < x + width / 4
+                && input.mouse_y > y - height / 4 && input.mouse_y < y + height / 4;
     }
 }

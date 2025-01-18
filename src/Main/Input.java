@@ -31,12 +31,12 @@ public class Input implements MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        buttonsLast[e.getButton()] = true;
+        buttons[e.getButton()] = true;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        buttonsLast[e.getButton()] = false;
+        buttons[e.getButton()] = false;
     }
 
     @Override
@@ -62,6 +62,16 @@ public class Input implements MouseListener, MouseMotionListener {
         mouse_y = (int)(e.getY() / game.scale);
     }
 
+    public boolean isButton(int key) {
+        return buttons[key];
+    }
 
+    public boolean isButtonUp(int key) {
+        return !buttons[key] && buttonsLast[key];
+    }
+
+    public boolean isButtonDown(int key) {
+        return buttons[key] && !buttonsLast[key];
+    }
 
 }

@@ -41,6 +41,7 @@ public class Game extends JPanel implements Runnable {
         cursor.setup(100,100);
 
         coin = new Coin(this);
+        coin.setup(180,90);
 
         player = new Player(this);
         player.setup(100, 100);
@@ -92,6 +93,8 @@ public class Game extends JPanel implements Runnable {
             enemy.update();
             coin.update();
             cursor.update();
+
+            input.update();
         }
     }
 
