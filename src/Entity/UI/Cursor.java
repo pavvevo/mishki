@@ -21,8 +21,8 @@ public class Cursor extends Entity {
     }
 
     public  void update() {
-        x = game.getInput().mouse_x + 16;
-        y = game.getInput().mouse_y + 9;
+        x = game.input.mouse_x + 16;
+        y = game.input.mouse_y + 9;
     }
 
     public void draw(Graphics2D g2d) {
