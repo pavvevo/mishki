@@ -1,5 +1,6 @@
 package Main;
 
+import Entity.Entity;
 import Entity.Coin;
 import Entity.Enemy;
 import Entity.Player;
@@ -37,12 +38,20 @@ public class Game extends JPanel implements Runnable {
 
     Cursor cursor;
     public Input input;
-    Deck deck;
+    public Deck deck;
     Coin coin;
     Button buttonMenu;
     Player player;
     Enemy enemy;
     Map map;
+
+    public Entity selected_target;
+    public boolean is_target_player = false;
+
+    public int tails_mana = 0;
+    public int heads_mana = 0;
+    public int max_tosses = 3;
+    public int tosses = max_tosses;
 
     public Game() {
         this.setPreferredSize(new Dimension(screen_width, screen_height));
@@ -56,7 +65,6 @@ public class Game extends JPanel implements Runnable {
     }
 
     public void startGame() {
-
         try {
             bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/bg.png"));
         } catch (IOException e) {
@@ -83,6 +91,11 @@ public class Game extends JPanel implements Runnable {
         gameThread.start();
     }
 
+    public void setSelectedTarget(Entity target, boolean is_player) {
+        this.selected_target = target;
+        this.is_target_player = is_player;
+    }
+
     @Override
     public void run() {
 
@@ -94,7 +107,6 @@ public class Game extends JPanel implements Runnable {
         int draw_count = 0;
 
         while(gameThread != null) {
-
             current_time = System.nanoTime();
             delta += (current_time - last_time) / draw_interval;
             timer += current_time - last_time;
@@ -117,6 +129,8 @@ public class Game extends JPanel implements Runnable {
 
     public void update() {
         if(has_started) {
+
+            selected_target = null;
             cursor.update();
 
             switch(State) {
