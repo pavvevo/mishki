@@ -1,25 +1,27 @@
 package Entity;
 
 import Main.Game;
+
 import java.awt.*;
 
-public class Player extends Entity {
+public class Enemy extends Entity{
     Game game;
 
-    public Player(Game game) {
+    public Enemy(Game game) {
         this.game = game;
     }
 
-    public void setup(int x, int y) {
+    public void setup(int x, int y, String name) {
         this.x = x;
         this.y = y;
         max_health = 20;
         health = max_health;
         xscale = 1.5;
         yscale = 0.5;
-        name = "The Fox";
         scale = game.scale;
-        getSprite("/Resources/Player/player_back.png");
+        this.name = name;
+
+        getSprite("/Resources/Enemy/mouse.png");
     }
 
     public void update() {

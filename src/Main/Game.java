@@ -1,21 +1,24 @@
 package Main;
 
+import Entity.Enemy;
 import Entity.Player;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Game extends JPanel implements Runnable {
-    final int scale = 3;
-    final int screen_width = 320 * scale;
-    final int screen_height = 180 * scale;
+    public final int scale = 3;
+    public final int screen_width = 320 * scale;
+    public final int screen_height = 180 * scale;
 
     final int FPS = 60;
 
     Thread gameThread;
+    boolean has_started = false;
 
     //neshta
     Player player;
+    Enemy enemy;
 
     public Game() {
         this.setPreferredSize(new Dimension(screen_width, screen_height));
@@ -24,11 +27,16 @@ public class Game extends JPanel implements Runnable {
     }
 
     public void startGame() {
-        gameThread = new Thread(this);
-        gameThread.start();
-
         player = new Player(this);
         player.setup(100, 100);
+
+        enemy = new Enemy(this);
+        enemy.setup(200, 50, "Mouse");
+
+        has_started = true;
+
+        gameThread = new Thread(this);
+        gameThread.start();
     }
 
     @Override
@@ -64,13 +72,19 @@ public class Game extends JPanel implements Runnable {
     }
 
     public void update() {
-        player.update();
+        if(has_started) {
+            player.update();
+            enemy.update();
+        }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        player.draw(g2d);
+        if(has_started) {
+            player.draw(g2d);
+            enemy.draw(g2d);
+        }
         g2d.dispose();
     }
 }
