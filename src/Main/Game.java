@@ -44,6 +44,11 @@ public class Game extends JPanel implements Runnable {
         this.setPreferredSize(new Dimension(screen_width, screen_height));
         this.setBackground(Color.GRAY);
         this.setDoubleBuffered(true);
+
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Image cursorImage = toolkit.createImage(""); // Invisible cursor image
+        java.awt.Cursor invisibleCursor = toolkit.createCustomCursor(cursorImage, new Point(0, 0), "InvisibleCursor");
+        this.setCursor(invisibleCursor);
     }
 
     public void startGame() {
