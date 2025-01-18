@@ -4,7 +4,7 @@ import java.awt.event.*;
 
 public class Input implements MouseListener, MouseMotionListener {
     public Input() {
-
+        //w
     }
 
     @Override
