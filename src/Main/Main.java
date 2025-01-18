@@ -13,7 +13,7 @@ public class Main {
 
         window.setResizable(false);
         window.setTitle("Foxing Flips 3D");
-
+        //f
         Game game = new Game();
         window.add(game);
 
