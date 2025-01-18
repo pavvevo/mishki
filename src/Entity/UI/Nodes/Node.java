@@ -23,6 +23,6 @@ public class Node extends Entity {
 
     @Override
     public String toString() {
-        return " alo ";
+        return " Node ";
     }
 }

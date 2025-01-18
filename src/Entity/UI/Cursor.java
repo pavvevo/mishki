@@ -24,7 +24,7 @@ public class Cursor extends Entity {
         this.y = y;
         xscale = 1;
         yscale = 1;
-        scale = 3;
+        scale = game.scale;
         try {
              up = ImageIO.read(getClass().getResourceAsStream("/Resources/UI/cursor_up.png"));
              down = ImageIO.read(getClass().getResourceAsStream("/Resources/UI/cursor_up.png"));
