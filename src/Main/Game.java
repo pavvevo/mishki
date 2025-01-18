@@ -70,7 +70,7 @@ public class Game extends JPanel implements Runnable {
         cursor.setup(100, 100);
         enemy.setup(240, 50, "Mouse");
         player.setup(40, 100);
-        coin.setup(180, 75);
+        coin.setup(160, 75);
 
         has_started = true;
 

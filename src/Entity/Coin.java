@@ -39,6 +39,7 @@ public class Coin extends Entity {
         heads = getImg("/Resources/UI/coin_heads.png");
         tails = getImg("/Resources/UI/coin_tails.png");
         setSprite(heads);
+        shadow = getImg("/Resources/Other/shadow.png");
         rand = new Random();
     }
 
@@ -61,8 +62,8 @@ public class Coin extends Entity {
 
 
                 offset_y = 0;
-                xscale = 1.25;
-                yscale = 0.75;
+                xscale = 0.75;
+                yscale = 0.5;
                 spin = 0;
             }
         }
@@ -112,7 +113,13 @@ public class Coin extends Entity {
 
         g2d.setColor(Color.WHITE);
 
-        g2d.drawImage(shadow, x * scale, y * scale, 48 * scale, 24 * scale, null);
+        int shadow_width  = 48 * scale;
+        int shadow_height = 32 * scale;
+        if(offset_y < 0) {
+            shadow_width += offset_y * scale / 3;
+            shadow_height += offset_y * scale / 3;
+        }
+        g2d.drawImage(shadow, x * scale - shadow_width / 2, y * scale - (shadow_height / 2 - 32), shadow_width, shadow_height, null);
         width = (int)(xscale * sprite_width * scale);
         height = (int)(yscale * sprite_height * scale);
         g2d.drawImage(sprite, x * scale - width / 2, (y + (int)offset_y) * scale - height / 2, width, height, null);
