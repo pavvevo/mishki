@@ -53,9 +53,6 @@ public class Move extends Entity {
                 }
 
                 display_number = final_damage;
-
-                owner.x -= 7 * scale;
-                owner.y += 2 * scale;
                 owner.xscale = 1.5;
                 owner.yscale = 0.5;
                 target.xscale = 1.5;
@@ -71,15 +68,28 @@ public class Move extends Entity {
                 target.xscale = 0.5;
                 target.yscale = 1.5;
                 break;
+            case "Anger":
+                game.addBuff(target, "Anger", 2);
+                target.xscale = 0.5;
+                target.yscale = 1.5;
+                break;
         }
     }
 
     public void draw(Graphics2D g2d) {
-        g2d.setColor(Color.RED);
         Font currentFont = g2d.getFont();
         Font newFont = currentFont.deriveFont(currentFont.getSize() * 0.75f * scale);
         g2d.setFont(newFont);
-        g2d.drawString(Integer.toString(owner.damage), 260*scale, 15*scale);
+        if(name == "Attack") {
+            g2d.setColor(Color.RED);
+
+            g2d.drawString(Integer.toString(owner.damage), 260*scale, 15*scale);
+        }
+        else if(name == "Block") {
+            g2d.setColor(Color.BLUE);
+            g2d.drawString(Integer.toString(owner.block_power), 260*scale, 15*scale);
+        }
+
         g2d.drawImage(intent, owner.x * scale, owner.y * scale - 48 * scale, intent.getWidth() * scale, intent.getHeight() * scale, null);
         g2d.setColor(Color.BLACK);
     }
