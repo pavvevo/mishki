@@ -35,6 +35,7 @@ public class Entity {
 
     public int lerp_x;
     public int lerp_y;
+
     public double lil_sin = 0;
     public double sin_timer = 0;
 
