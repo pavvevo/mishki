@@ -179,6 +179,9 @@ public class Enemy extends Entity{
         g2d.fillRoundRect(start_x + border, start_y + border - 1, final_width - 2 * border, hb_height - 2 *border + 3, 10, 10);
 
         g2d.setColor(Color.BLACK);
+        Font currentFont = g2d.getFont();
+        Font newFont = currentFont.deriveFont(currentFont.getSize() * 0.15f * scale);
+        g2d.setFont(newFont);
         g2d.drawString(String.valueOf(health) + "/" + String.valueOf(max_health), x * scale + 4 * scale - hb_width / 2, y * scale + 30 * scale + 1);
 
         if(block > 0) {

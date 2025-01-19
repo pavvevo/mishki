@@ -80,6 +80,11 @@ public class Move extends Entity {
     }
 
     public void draw(Graphics2D g2d) {
+        g2d.setColor(Color.RED);
+        Font currentFont = g2d.getFont();
+        Font newFont = currentFont.deriveFont(currentFont.getSize() * 0.75f * scale);
+        g2d.setFont(newFont);
+        g2d.drawString(Integer.toString(owner.damage), 260*scale, 15*scale);
         g2d.drawImage(intent, owner.x * scale, owner.y * scale - 48 * scale, intent.getWidth() * scale, intent.getHeight() * scale, null);
         g2d.setColor(Color.BLACK);
     }
