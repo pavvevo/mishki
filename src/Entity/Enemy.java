@@ -52,10 +52,11 @@ public class Enemy extends Entity{
 
         block_icon = getImg("/Resources/UI/Battle/block_icon.png");
 
+        shadow = getImg("/Resources/Other/shadow.png");
+
         switch(name) {
             default: case "Mouse":
                 setSprite(getImg("/Resources/Enemy/mouse.png"));
-                shadow = getImg("/Resources/Other/shadow.png");
                 max_health = 20;
                 block_power = 10;
                 damage = 6;
@@ -67,6 +68,24 @@ public class Enemy extends Entity{
 
                 move_count = moves.size();
 
+                break;
+            case "Fly":
+                setSprite(getImg("/Resources/Enemy/fly.png"));
+                max_health = 10;
+                block_power = 5;
+                block = 25;
+                damage = 10;
+
+                game.addBuff(this, "Guard", 5);
+
+                Move move_fly = new Move(game, this, player,"Attack");
+                moves.add(move_fly);
+                Move move_block = new Move(game, this, this,"Block");
+                moves.add(move_block);
+                moves.add(move_block);
+                moves.add(move_block);
+
+                move_count = moves.size();
                 break;
             case "Tish":
                 //
@@ -160,9 +179,6 @@ public class Enemy extends Entity{
         g2d.fillRoundRect(start_x + border, start_y + border - 1, final_width - 2 * border, hb_height - 2 *border + 3, 10, 10);
 
         g2d.setColor(Color.BLACK);
-        Font currentFont = g2d.getFont();
-        Font newFont = currentFont.deriveFont(currentFont.getSize() * 0.15f * scale);
-        g2d.setFont(newFont);
         g2d.drawString(String.valueOf(health) + "/" + String.valueOf(max_health), x * scale + 4 * scale - hb_width / 2, y * scale + 30 * scale + 1);
 
         if(block > 0) {
