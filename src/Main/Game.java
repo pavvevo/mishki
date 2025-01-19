@@ -120,6 +120,7 @@ public class Game extends JPanel implements Runnable {
         }
         if(!updated) {
             Buff new_buff = new Buff(this, name);
+            new_buff.remaining = ammount;
             target.buffs.add(new_buff);
         }
     }
@@ -168,15 +169,24 @@ public class Game extends JPanel implements Runnable {
             tosses = max_tosses;
 
             removeBuff(enemy, "Intimidate", 1);
+            removeBuff(player, "New Stick", 1);
 
             if(getBuffAmmount(player, "Poison") > 0) {
                 player.health -= 2;
+                player.shake = 5;
                 removeBuff(player, "Poison", 1);
             }
 
             if(getBuffAmmount(enemy, "Poison") > 0) {
                 enemy.health -= 2;
+                player.shake = 5;
                 removeBuff(enemy, "Poison", 1);
+            }
+
+            if(getBuffAmmount(enemy, "Guard") > 0) {
+                enemy.xscale = 0.75;
+                enemy.yscale = 1.25;
+                enemy.block += 5;
             }
         }
 
@@ -185,6 +195,12 @@ public class Game extends JPanel implements Runnable {
             heads_mana = 0;
             tails_mana = 0;
             enemy.block = 0;
+
+            if(getBuffAmmount(player, "Guard") > 0) {
+                player.xscale = 0.75;
+                player.yscale = 1.25;
+                player.block += 5;
+            }
         }
     }
 

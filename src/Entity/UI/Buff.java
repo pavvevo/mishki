@@ -10,9 +10,7 @@ public class Buff extends Entity {
 
     BufferedImage icon;
     Game game;
-    public int remaining = 1;
-
-
+    public int remaining;
 
     public Buff(Game game, String name) {
         this.game = game;
