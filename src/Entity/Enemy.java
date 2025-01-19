@@ -109,6 +109,7 @@ public class Enemy extends Entity{
 
         if(health <= 0) {
             dead = true;
+            game.shop.newCards();
             game.State = game.State.SHOP;
         }
 

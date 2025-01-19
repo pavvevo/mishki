@@ -60,7 +60,7 @@ public class Game extends JPanel implements Runnable {
     public Enemy enemy;
     Map map;
     Chest_State chest;
-    ShopCards shop;
+    public ShopCards shop;
 
     public Entity selected_target;
     public boolean is_target_player = false;
