@@ -28,7 +28,8 @@ public class Enemy extends Entity{
             default: case "Mouse":
                 setSprite(getImg("/Resources/Enemy/mouse.png"));
                 shadow = getImg("/Resources/Other/shadow.png");
-                max_health = 10;
+                max_health = 8;
+                health = max_health;
                 break;
             case "Tish":
                 //
@@ -48,6 +49,7 @@ public class Enemy extends Entity{
 
         if(health <= 0) {
             dead = true;
+            game.State = game.State.MENU;
         }
 
         if(isHovered(game.input) && game.input.isButtonDown(MouseEvent.BUTTON1)) {
@@ -74,5 +76,7 @@ public class Enemy extends Entity{
         width = (int)(xscale * sprite_width * scale);
         height = (int)(yscale * sprite_height * scale);
         g2d.drawImage(sprite, x * scale - width / 2 + shake_x, y * scale - height / 2 + shake_y, width, height, null);
+
+        g2d.drawString("Hellow team", x * scale, y * scale);
     }
 }

@@ -18,8 +18,9 @@ public class Coin extends Entity {
     private double vsp = 0;
     private double offset_y = 0;
 
-    public BufferedImage heads;
-    public BufferedImage tails;
+    BufferedImage heads;
+    BufferedImage tails;
+    BufferedImage end;
 
     BufferedImage heads_icon;
     BufferedImage tails_icon;
@@ -37,6 +38,7 @@ public class Coin extends Entity {
         offset_y = 0;
         heads = getImg("/Resources/UI/coin_heads.png");
         tails = getImg("/Resources/UI/coin_tails.png");
+        end = getImg("/Resources/UI/coin_end.png");
         setSprite(heads);
         shadow = getImg("/Resources/Other/shadow.png");
         rand = new Random();
@@ -46,20 +48,17 @@ public class Coin extends Entity {
     }
 
     public void spin_coin(int spin) {
-        if(game.tosses > 0) {
-            game.tosses -= 1;
-            this.spin = spin;
-            spin_speed = 0.25;
-            xscale = 1.5;
-            vsp = -5.0;
-        }
+        game.tosses -= 1;
+        this.spin = spin;
+        spin_speed = 0.25;
+        xscale = 1.5;
+        vsp = -5.0;
     }
 
     public void update() {
 
+        //coin spining
         if(spin > 0) {
-            vsp += gravity;
-            offset_y += vsp;
             if (offset_y > 0) {
                 side = rand.nextInt(2);
 
@@ -76,11 +75,36 @@ public class Coin extends Entity {
             }
         }
 
-        if(isHovered(game.input)) {
+        vsp += gravity;
+        offset_y += vsp;
+        if(spin <= 0) {
+            if(offset_y >= 0) {
+                offset_y = 0;
+                vsp = 0;
+            }
+        }
 
+        if (offset_y < -999) {
+            offset_y = -200;
+        }
+
+        //click
+        if(isHovered(game.input)) {
             if(spin <= 0) {
                 if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
-                    spin_coin(60);
+                    if(game.tosses > 0 && game.turn) {
+                        spin_coin(60);
+                    } else if(game.tosses == 0){
+                        xscale = 1.75;
+                        yscale = 0.25;
+                        game.tosses = -1;
+                    } else if(game.tosses == -1) {
+                        game.turn = false;
+                        vsp = -20;
+                        gravity = -0.5;
+                        yscale = 5;
+                        xscale = 0.2;
+                    }
                 }
             }
         }
@@ -109,10 +133,15 @@ public class Coin extends Entity {
     }
 
     public void draw(Graphics2D g2d) {
-        if(side == 0) {
-            setSprite(tails);
+
+        if(game.tosses >= 0) {
+            if(side == 0) {
+                setSprite(tails);
+            } else {
+                setSprite(heads);
+            }
         } else {
-            setSprite(heads);
+            setSprite(end);
         }
 
         g2d.setColor(Color.WHITE);
@@ -122,6 +151,14 @@ public class Coin extends Entity {
         if(offset_y < 0) {
             shadow_width += offset_y * scale / 3;
             shadow_height += offset_y * scale / 3;
+
+            shadow_width = min(shadow_width, 48 * scale);
+            shadow_height = min(shadow_height, 32 * scale);
+        }
+
+        if(offset_y < -100) {
+            shadow_width = 0;
+            shadow_height = 0;
         }
         g2d.drawImage(shadow, x * scale - shadow_width / 2, y * scale - (shadow_height / 2 - 32), shadow_width, shadow_height, null);
         width = (int)(xscale * sprite_width * scale);
