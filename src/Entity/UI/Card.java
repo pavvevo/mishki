@@ -206,6 +206,12 @@ public class Card extends Entity {
                 cast_on_enemy = true;
                 description[0] = "Deals Damage equel to your Block";
                 break;
+            case "Infected":
+                cost_heads = 1;
+                card_icon = getImg("/Resources/UI/Cards/card_infected.png");
+                cast_on_enemy = true;
+                description[0] = "Deals 2 Damage.";
+                description[1] = "Inflicts 3 Poison.";
         }
     }
 
@@ -394,6 +400,18 @@ public class Card extends Entity {
                     if(target.block <= 0) {
                         target.health += target.block;
                     }
+
+                    target.xscale = 1.5;
+                    target.yscale = 0.5;
+                    target.shake = 10;
+                    break;
+                case "Infected":
+                    target.block -= final_damage;
+                    if(target.block <= 0) {
+                        target.health += target.block;
+                    }
+
+                    game.addBuff(target, "Poison", 3);
 
                     target.xscale = 1.5;
                     target.yscale = 0.5;
