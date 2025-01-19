@@ -30,6 +30,9 @@ public class Button extends Entity {
             default: case "Menu Button":
                 setSprite(getImg("/Resources/UI/button_start.png"));
                 break;
+            case "Map":
+                setSprite(getImg("/Resources/UI/button_map.png"));
+                break;
         }
     }
 
@@ -49,6 +52,9 @@ public class Button extends Entity {
             if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
                 switch(name) {
                     default: case "Menu Button":
+                        game.State = game.State.MAP;
+                        break;
+                    case "Map":
                         game.State = game.State.MAP;
                         break;
                 }
