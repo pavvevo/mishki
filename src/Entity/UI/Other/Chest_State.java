@@ -25,6 +25,7 @@ public class Chest_State extends Entity {
         g2d.drawString("+1 Roll!", 120 * scale, 75 * scale);
     }
     public void update() {
+        //alo
         if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
             game.max_tosses++;
             game.tosses = game.max_tosses;
