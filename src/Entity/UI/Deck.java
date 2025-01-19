@@ -47,7 +47,6 @@ public class Deck {
             "Hidden Penny",
             "Coin Trick",
             "Tail Whip",
-            "Infected"
 
     };
 

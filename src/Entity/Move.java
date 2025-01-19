@@ -71,11 +71,6 @@ public class Move extends Entity {
                 target.xscale = 0.5;
                 target.yscale = 1.5;
                 break;
-            case "Anger":
-                game.addBuff(target, "Anger", 2);
-                target.xscale = 0.5;
-                target.yscale = 1.5;
-                break;
         }
     }
 

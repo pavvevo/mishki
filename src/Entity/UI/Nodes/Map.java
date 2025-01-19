@@ -302,13 +302,13 @@ public Node ifDoNode() {
         switch(node.name) {
             case "Battle":
                 game.startBattle();
-                game.State = Game.STATE.GAME;
+       //         game.State = Game.STATE.GAME;
                 game.deck.at_shop = false;
                 break;
             case "Boss":
                 break;
             case "Shop":
-                game.State = Game.STATE.SHOP;
+               // game.State = Game.STATE.SHOP;
                 game.deck.at_shop = true;
                 break;
             case "Chest":

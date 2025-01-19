@@ -52,11 +52,10 @@ public class Enemy extends Entity{
 
         block_icon = getImg("/Resources/UI/Battle/block_icon.png");
 
-        shadow = getImg("/Resources/Other/shadow.png");
-
         switch(name) {
             default: case "Mouse":
                 setSprite(getImg("/Resources/Enemy/mouse.png"));
+                shadow = getImg("/Resources/Other/shadow.png");
                 max_health = 20;
                 block_power = 10;
                 damage = 6;
@@ -68,24 +67,6 @@ public class Enemy extends Entity{
 
                 move_count = moves.size();
 
-                break;
-            case "Fly":
-                setSprite(getImg("/Resources/Enemy/fly.png"));
-                max_health = 10;
-                block_power = 5;
-                block = 25;
-                damage = 10;
-
-                game.addBuff(this, "Guard", 5);
-
-                Move move_fly = new Move(game, this, player,"Attack");
-                moves.add(move_fly);
-                Move move_block = new Move(game, this, this,"Block");
-                moves.add(move_block);
-                moves.add(move_block);
-                moves.add(move_block);
-
-                move_count = moves.size();
                 break;
             case "Tish":
                 //

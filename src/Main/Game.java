@@ -11,13 +11,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Random;
 
 import Entity.UI.Button;
 import Entity.UI.Cursor;
 import Entity.UI.Nodes.Map;
 import Entity.UI.Other.Chest_State;
-import Entity.UI.Other.ShopCards;
 
 public class Game extends JPanel implements Runnable {
     public final int scale = 3;
@@ -38,17 +36,13 @@ public class Game extends JPanel implements Runnable {
     Thread gameThread;
     boolean has_started = false;
 
-    Random rand;
-
     //neshta
     Button buttonMenu;
-    Button buttonMap;
 
     BufferedImage bg;
     BufferedImage logo;
     BufferedImage map_bg;
     BufferedImage chest_bg;
-    BufferedImage shop_bg;
 
     public Card selected_card;
 
@@ -60,7 +54,6 @@ public class Game extends JPanel implements Runnable {
     public Enemy enemy;
     Map map;
     Chest_State chest;
-    ShopCards shop;
 
     public Entity selected_target;
     public boolean is_target_player = false;
@@ -70,11 +63,6 @@ public class Game extends JPanel implements Runnable {
     public boolean turn = true;
     public int max_tosses = 3;
     public int tosses = max_tosses;
-
-    String[] enemy_names = {
-            "Mouse",
-            "Fly"
-    };
 
     //card vars
     public int heads_up_buff = 0;
@@ -96,12 +84,9 @@ public class Game extends JPanel implements Runnable {
             map_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg.png"));
             logo = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/logo.png"));
             chest_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/chest_bg.png"));
-            shop_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/shop_bg.png"));
         } catch (IOException e) {
             System.out.println("CANT LOAD CERTAIN IMAGE");
         }
-
-        rand = new Random();
 
         buttonMenu = new Button(this, "Main Menu", 160, 140, 5, 2);
         input = new Input(this);
@@ -113,14 +98,11 @@ public class Game extends JPanel implements Runnable {
         coin = new Coin(this);
         deck = new Deck(this,5);
         cursor.setup(100, 100);
-        enemy.setup(240, 50, enemy_names[rand.nextInt(enemy_names.length)]);
+        enemy.setup(240, 50, "Mouse");
         player.setup(40, 100);
         coin.setup(160, 75);
         map.setup();
         chest.setup();
-        shop = new ShopCards(this);
-        buttonMap = new Button(this, "Map", 40, 140, 5, 2);
-
         has_started = true;
 
         gameThread = new Thread(this);
@@ -130,11 +112,10 @@ public class Game extends JPanel implements Runnable {
     public void resetGame() {
         State = STATE.MENU;
         cursor.setup(100, 100);
-        enemy.setup(240, 50, enemy_names[rand.nextInt(enemy_names.length)]);
+        enemy.setup(240, 50, "Mouse");
         player.setup(40, 100);
         coin.setup(160, 75);
         map.setup();
-
     }
 
     public void setSelectedTarget(Entity target, boolean is_player) {
@@ -173,26 +154,19 @@ public class Game extends JPanel implements Runnable {
                 target.buffs.get(i).remaining -= ammount;
                 if(target.buffs.get(i).remaining <= 0) {
                     target.buffs.remove(i);
-                    i -= 1;
                 }
             }
         }
     }
 
     public void startBattle() {
-        enemy.setup(240, 50, enemy_names[rand.nextInt(enemy_names.length)]);
+        enemy.setup(240, 50, "Mouse");
 
         for(int i = 0; i < player.buffs.size(); i++) {
             player.buffs.remove(i);
-            i -= 1;
         }
-
-        tosses = max_tosses;
-
         heads_mana = 0;
         tails_mana = 0;
-
-        State = STATE.GAME;
     }
 
     public void changeTurn(boolean to) {
@@ -209,7 +183,6 @@ public class Game extends JPanel implements Runnable {
 
             removeBuff(enemy, "Intimidate", 1);
             removeBuff(player, "New Stick", 1);
-            removeBuff(player, "Anger", 1);
 
             if(getBuffAmmount(player, "Poison") > 0) {
                 player.health -= 2;
@@ -235,9 +208,6 @@ public class Game extends JPanel implements Runnable {
             heads_mana = 0;
             tails_mana = 0;
             enemy.block = 0;
-
-            removeBuff(enemy, "Anger", 1);
-            removeBuff(player, "Guard", 1);
 
             if(getBuffAmmount(player, "Guard") > 0) {
                 player.xscale = 0.75;
@@ -297,15 +267,12 @@ public class Game extends JPanel implements Runnable {
 
                 case MAP:
                     map.update();
-                    buttonMap.update();
                     break;
                 case CHEST:
                     chest.update();
                     break;
                 case SHOP:
                     deck.update();
-                    shop.update();
-                    buttonMap.update();
 
             }
 
@@ -341,10 +308,8 @@ public class Game extends JPanel implements Runnable {
                     map.draw(g2d);
                     break;
                 case SHOP:
-                    g2d.drawImage(shop_bg, 0, 0, shop_bg.getWidth() * scale, shop_bg.getHeight() * scale, null);
-                    shop.draw(g2d);
+                    g2d.drawImage(map_bg, 0, 0, map_bg.getWidth() * scale, map_bg.getHeight() * scale, null);
                     deck.draw(g2d);
-                    buttonMap.draw(g2d);
                     break;
                 case CHEST:
                     g2d.drawImage(chest_bg, 0, 0, chest_bg.getWidth() * scale, chest_bg.getHeight() * scale, null);
