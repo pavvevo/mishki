@@ -17,9 +17,6 @@ public class Node extends Entity {
         this.connections = new ArrayList<Node>();
     }
 
-    public int newPath() {
-        return 0;
-    }
 
     @Override
     public String toString() {
@@ -44,7 +41,9 @@ public class Node extends Entity {
         g2d.setColor(Color.WHITE);
         width = (int)(xscale * sprite_width * scale);
         height = (int)(yscale * sprite_height * scale);
-        g2d.drawImage(sprite, x * scale - width / 2, y * scale - height / 2, width, height, null);
 
+    }
+    public void update(Graphics g2d) {
+        g2d.drawImage(sprite, x * scale - width / 2, y * scale - height / 2, width, height, null);
     }
 }

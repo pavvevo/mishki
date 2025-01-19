@@ -4,9 +4,6 @@ import Entity.UI.Card;
 import Main.Game;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 public class Map {
     Node[][] m = new Node[10][5];
@@ -17,7 +14,7 @@ public class Map {
     }
     public void setup() {
 
-        nodeX = 220/m[9].length/7 * game.scale;
+        nodeX = 220/m[9].length/3 * game.scale;
         nodeY = 180/m.length/9 * game.scale;
         m[9][2] = new Boss(game);
         createNodes(m);
@@ -25,7 +22,7 @@ public class Map {
             for(int j = 0; j < m[i].length; j++) {
                 System.out.print(m[i][j]);
                 if(m[i][j] != null) {
-                    m[i][j].x += (j*nodeX + 50 * game.scale) - 25;
+                    m[i][j].x += (j*nodeX + 50 * game.scale) - 80;
                     m[i][j].y += (i*nodeY * game.scale) * -1 + 170;
                 }
 
@@ -33,6 +30,8 @@ public class Map {
             System.out.println("///");
         }
         pathsUp(m);
+        pathsDown(m);
+
     }
 
     public void createNodes(Node[][] m) {
@@ -90,9 +89,6 @@ public Node ifDoNode() {
          }
         return null;
 }
-//runva dali ima <= 2 puteki ako nqma slaga puteka nazad runva otnovo ako pak ima s <=2 puteki slaga i nagore
-    //proverqva vsichki sledvashti redove za da nameri nai-blizkiq node, no samo ako trite pred nego sa prazni
-    //   /\ moje da se polzva i nazad za da nameri zadniq node
     public Node randomNode() {
         Random random = new Random();
         int randomNumber = random.nextInt(100 + 1 - 2) + 2;
@@ -127,7 +123,7 @@ public Node ifDoNode() {
                             m[i][j].addConnection(m[i+1][j+1]);
                         }
                         else {
-                            //method check distance
+                            m[i][j].addConnection(m[checkDistX(m[i][j], m, i)][checkDistY(m[i][j], m, i)]);
                         }
 
                     }
@@ -140,7 +136,7 @@ public Node ifDoNode() {
                             m[i][j].addConnection(m[i+1][j-1]);
                         }
                         else {
-                            //method check distance
+                            m[i][j].addConnection(m[checkDistX(m[i][j], m, i)][checkDistY(m[i][j], m, i)]);
                         }
 
                     }
@@ -156,7 +152,7 @@ public Node ifDoNode() {
                             m[i][j].addConnection(m[i+1][j+1]);
                         }
                         else {
-                            //method check distance
+                            m[i][j].addConnection(m[checkDistX(m[i][j], m, i)][checkDistY(m[i][j], m, i)]);
                         }
 
                     }
@@ -164,18 +160,90 @@ public Node ifDoNode() {
             }
         }
     }
+    public void pathsDown(Node[][] m) {
+        for(int i = 0; i < m.length-1; i++) {
+            for (int j = 0; j < m[i].length; j++) {
+                if(m[i][j] != null) {
+                    if(m[i][j].recievepath < 1) {
+                        m[i][j].addConnection(m     [checkDistX(m[i][j], m, -i)]     [checkDistY(m[i][j], m, -i)]         );
+                    }
+                }
+            }
+        }
+    }
+    public int checkDistX(Node node, Node[][] m, int currI) {
+        double dist = 1000000000;
+        double tempdist = 0;
+        int x = 0;
+        if(currI >= 0) {
+            for(int i = currI+1; i < m.length; i++) {
+                for (int j = 0; j < m[i].length; j++) {
+                    if(m[i][j] != null) {
+                        tempdist = Math.sqrt(Math.pow(m[i][j].x - node.x, 2) + Math.pow(m[i][j].y - node.y, 2));
+                        if(tempdist < dist) {
+                            dist = tempdist;
+                            x = i;
+                        }
+                    }
+                }
+            }
+            return x;
+        }
+        else {
+            currI *= -1;
+            for(int i = m.length-(m.length - currI)-1; i >= 0; i--) {
+                for (int j = 0; j < m[i].length; j++) {
+                    if(m[i][j] != null) {
+                        tempdist = Math.sqrt(Math.pow(m[i][j].x - node.x, 2) + Math.pow(m[i][j].y - node.y, 2));
+                        if(tempdist < dist) {
+                            dist = tempdist;
+                            x = i;
+                        }
+                    }
+                }
+            }
+            return x;
+        }
+    }
+    public int checkDistY(Node node, Node[][] m, int currI) {
+        double dist = 1000000000;
+        double tempdist = 0;
+        int y = 0;
+        if(currI >= 0) {
+            for(int i = currI+1; i < m.length; i++) {
+                for (int j = 0; j < m[i].length; j++) {
+                    if(m[i][j] != null) {
+                        tempdist = Math.sqrt(Math.pow(m[i][j].x - node.x, 2) + Math.pow(m[i][j].y - node.y, 2));
+                        if(tempdist < dist) {
+                            dist = tempdist;
+                            y = j;
 
+                        }
+                    }
+                }
+            }
+            return y;
+        }
+        else {
+            currI *= -1;
+            for(int i = m.length-(m.length - currI)-1; i >= 0; i--) {
+                for (int j = 0; j < m[i].length; j++) {
+                    if(m[i][j] != null) {
+                        tempdist = Math.sqrt(Math.pow(m[i][j].x - node.x, 2) + Math.pow(m[i][j].y - node.y, 2));
+                        if(tempdist < dist) {
+                            dist = tempdist;
+                            y = j;
 
+                        }
+                    }
+                }
+            }
+            return y;
+        }
 
-
-
-
-
-
+    }
 
     public void draw(Graphics2D g2d) {
-
-        g2d.setColor(Color.WHITE);
         for(int i = 0; i < m.length; i++) {
             for(int j = 0; j < m[i].length; j++) {
                 if(m[i][j] != null) {
@@ -184,6 +252,14 @@ public Node ifDoNode() {
 
             }
         }
+        for(int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[i].length; j++) {
+                if(m[i][j] != null) {
+                    m[i][j].update(g2d);
+                }
+            }
+        }
+
     }
     public void update() {
 
