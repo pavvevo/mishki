@@ -12,11 +12,11 @@ public class Coin extends Entity {
     public int spin = 0;
     public double spin_speed = 0.25;
     public int side = 0;
-    private int wait = 0;
+    public int wait = 0;
 
-    private double gravity = 0.2;
-    private double vsp = 0;
-    private double offset_y = 0;
+    public double gravity = 0.2;
+    public double vsp = 0;
+    public double offset_y = 0;
 
     BufferedImage heads;
     BufferedImage tails;
@@ -36,9 +36,9 @@ public class Coin extends Entity {
         this.x = x;
         this.y = y;
         offset_y = 0;
-        heads = getImg("/Resources/UI/coin_heads.png");
-        tails = getImg("/Resources/UI/coin_tails.png");
-        end = getImg("/Resources/UI/coin_end.png");
+        heads = getImg("/Resources/UI/Battle/coin_heads.png");
+        tails = getImg("/Resources/UI/Battle/coin_tails.png");
+        end = getImg("/Resources/UI/Battle/coin_end.png");
         setSprite(heads);
         shadow = getImg("/Resources/Other/shadow.png");
         rand = new Random();
@@ -66,10 +66,14 @@ public class Coin extends Entity {
                     game.tails_mana += 1;
                 } else {
                     game.heads_mana += 1;
+                    if(game.getBuffAmmount(game.player, "Heads Up") > 0) {
+                        game.heads_mana += 1;
+                        game.removeBuff(game.player, "Heads Up", 1);
+                    }
                 }
 
                 offset_y = 0;
-                xscale = 0.75;
+                xscale = 1.5;
                 yscale = 0.5;
                 spin = 0;
             }
@@ -90,6 +94,8 @@ public class Coin extends Entity {
 
         //click
         if(isHovered(game.input)) {
+            target_xscale = 1.25;
+            target_yscale = 1.25;
             if(spin <= 0) {
                 if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
                     if(game.tosses > 0 && game.turn) {
@@ -99,7 +105,7 @@ public class Coin extends Entity {
                         yscale = 0.25;
                         game.tosses = -1;
                     } else if(game.tosses == -1) {
-                        game.turn = false;
+                        game.changeTurn(false);
                         vsp = -20;
                         gravity = -0.5;
                         yscale = 5;
@@ -107,6 +113,9 @@ public class Coin extends Entity {
                     }
                 }
             }
+        } else {
+            target_xscale = 1;
+            target_yscale = 1;
         }
         if(spin > 0) {
             yscale = abs(sin(spin * spin_speed));
@@ -127,8 +136,8 @@ public class Coin extends Entity {
             spin_speed -= 0.001;
             spin -= 1;
         } else {
-            yscale = lerp(yscale, 1.0, 0.2);
-            xscale = lerp(xscale, 1.0, 0.2);
+            yscale = lerp(yscale, target_yscale, 0.2);
+            xscale = lerp(xscale, target_yscale, 0.2);
         }
     }
 

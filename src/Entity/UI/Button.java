@@ -46,7 +46,7 @@ public class Button extends Entity {
                 switch(name) {
                     default: case "Menu Button":
                         game.State = game.State.GAME;
-                        game.enemy.setup(240, 50, "Mouse");;
+                        game.startBattle();
                         break;
                 }
             }

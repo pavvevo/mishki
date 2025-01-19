@@ -52,10 +52,10 @@ public class Card extends Entity {
 
         heads_icon = getImg("/Resources/UI/Cards/notches_heads.png");
         tails_icon = getImg("/Resources/UI/Cards/notches_tails.png");
-        target_enemy_icon = getImg("/Resources/UI/enemy_target.png");
-        target_player_icon = getImg("/Resources/UI/player_target.png");
-        enemy_arrow = getImg("/Resources/UI/enemy_arrow.png");
-        player_arrow = getImg("/Resources/UI/player_arrow.png");
+        target_enemy_icon = getImg("/Resources/UI/Battle/enemy_target.png");
+        target_player_icon = getImg("/Resources/UI/Battle/player_target.png");
+        enemy_arrow = getImg("/Resources/UI/Battle/enemy_arrow.png");
+        player_arrow = getImg("/Resources/UI/Battle/player_arrow.png");
     }
 
     public void setCardType(String cardType) {
@@ -75,6 +75,32 @@ public class Card extends Entity {
                 card_icon = getImg("/Resources/UI/Cards/card_tail_defence.png");
                 cast_on_self = true;
                 break;
+            case "Heads Down":
+                cost_tails = 1;
+                card_icon = getImg("/Resources/UI/Cards/card_heads_down.png");
+                cast_on_self = true;
+                break;
+            case "Heads Up":
+                cost_tails = 2;
+                card_icon = getImg("/Resources/UI/Cards/card_heads_up.png");
+                cast_on_self = true;
+                break;
+            case "Intimidate":
+                cost_heads = 1;
+                card_icon = getImg("/Resources/UI/Cards/card_Intimidate.png");
+                cast_on_enemy = true;
+                damage = 5;
+                break;
+            case "New Stick":
+                cost_heads = 1;
+                card_icon = getImg("/Resources/UI/Cards/card_new_stick.png");
+                cast_on_self = true;
+                break;
+            case "Sneak Stike":
+                cost_heads = 1;
+                card_icon = getImg("/Resources/UI/Cards/card_sneak_strike.png");
+                cast_on_enemy = true;
+                break;
         }
     }
 
@@ -84,7 +110,7 @@ public class Card extends Entity {
     }
 
     public void casting() {
-        if(selectable && game.input.isButtonUp(MouseEvent.BUTTON1)) {
+        if(selected && game.input.isButtonUp(MouseEvent.BUTTON1)) {
             if(game.tails_mana >= cost_tails && game.heads_mana >= cost_heads) {
                 boolean can_target = game.selected_target != null;
 
@@ -165,9 +191,40 @@ public class Card extends Entity {
     }
 
     public void castOnEnemy(Entity target) {
+
+            int final_damage = damage;
+            if(game.getBuffAmmount(game.player, "New Stick") > 0) {
+                final_damage += 2;
+            }
+
             switch(name) {
                 case "Rock Throw":
-                    target.health -= damage;
+                    int total_hp = target.health + target.block;
+                    total_hp -= final_damage;
+                    if(total_hp > target.max_health) {
+                        target.block = total_hp - target.max_health;
+                    } else {
+                        target.block = 0;
+                        target.health = total_hp;
+                    }
+
+                    target.xscale = 1.5;
+                    target.yscale = 0.5;
+                    target.shake = 10;
+                    break;
+                case "Intimidate":
+                    game.addBuff(target, "Intimidate", 2);
+                    target.shake = 7;
+
+                    break;
+                case "Sneak Strike":
+                    if(target.block > 0) {
+                        target.block -= final_damage;
+                        if (target.block <= 0) {
+                            target.block = 0;
+                        }
+                    }
+
                     target.xscale = 1.5;
                     target.yscale = 0.5;
                     target.shake = 10;
@@ -178,9 +235,19 @@ public class Card extends Entity {
     public void castOnSelf(Entity target) {
         switch(name) {
             case"Tail Defence":
-                target.block += 5;
+                target.block += 2;
                 target.yscale = 1.25;
                 target.xscale = 0.75;
+                break;
+            case "Heads Down":
+                game.tails_mana += game.heads_mana + 1;
+                game.heads_mana = 0;
+            break;
+            case "Heads Up":
+                game.addBuff(game.player, "Heads Up", 1);
+                break;
+            case "New Stick":
+                game.addBuff(game.player, "New Stick", 2);
                 break;
         }
     }

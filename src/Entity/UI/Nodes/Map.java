@@ -3,6 +3,7 @@ package Entity.UI.Nodes;
 import Main.Game;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -94,14 +95,12 @@ public Node ifDoNode() {
     }
 
     public void draw(Graphics2D g2d) {
+
         g2d.setColor(Color.WHITE);
         for(int i = 0; i < m.length; i++) {
             for(int j = 0; j < m[i].length; j++) {
-
                 if(m[i][j] != null) {
-
                     m[i][j].draw(g2d);
-
                 }
 
             }

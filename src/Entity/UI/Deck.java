@@ -2,6 +2,7 @@ package Entity.UI;
 
 import Entity.Entity;
 import Main.Game;
+import Entity.Player;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -27,15 +28,20 @@ public class Deck {
     public boolean inspect_enabled = false;
 
     Game game;
+    Player player;
 
     public Deck(Game game, int size) {
         this.size = size;
+        this.game = game;
+        player = game.player;
 
         cards = new ArrayList<Card>();
         for(int i = 0; i < size; i++) {
             String name = "";
             if(i == 0) name = "Rock Throw";
             if(i == 1) name = "Tail Defence";
+            if(i == 2) name = "Heads Down";
+            if(i == 3) name = "Heads Up";
             Card new_card = new Card(game, name);
             new_card.x = 116 + 42 * i;
             new_card.y = 300 + 100 * i;

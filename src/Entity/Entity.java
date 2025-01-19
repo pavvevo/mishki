@@ -1,5 +1,6 @@
 package Entity;
 
+import Entity.UI.Buff;
 import Main.Game;
 import Main.Input;
 
@@ -7,6 +8,7 @@ import javax.imageio.ImageIO;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 public class Entity {
@@ -29,7 +31,10 @@ public class Entity {
     public int width;
     public int height;
     Game game;
+    public List<Buff> buffs;
 
+    public int lerp_x;
+    public int lerp_y;
     public double lil_sin = 0;
     public double sin_timer = 0;
 
