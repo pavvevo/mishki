@@ -61,11 +61,12 @@ public class Deck {
         rand = new Random();
 
         cards = new ArrayList<Card>();
+        int rand_start_card = rand.nextInt(card_names.length-2)+ 2;
         for(int i = 0; i < size; i++) {
             String name = "";
             if(i == 0) name = "Rock Throw";
             if(i == 1) name = "Tail Defence";
-            if(i == 2) name = card_names[rand.nextInt(card_names.length)];
+            if(i == 2) name = card_names[rand_start_card];
             Card new_card = new Card(game, name);
             new_card.x = 116 + 42 * i;
             new_card.y = 300 + 100 * i;
@@ -92,13 +93,13 @@ public class Deck {
 
             indicator_x = lerp(indicator_x, lerp_x, 0.1);
 
-            if (game.input.isButtonDown(MouseEvent.BUTTON2)) {
-                for (int i = 0; i < size; i++) {
-                    String name = "";
-                    name = card_names[rand.nextInt(card_names.length)];
-                    cards.get(i).setCardType(name);
-                }
-            }
+//            if (game.input.isButtonDown(MouseEvent.BUTTON2)) {
+//                for (int i = 0; i < size; i++) {
+//                    String name = "";
+//                    name = card_names[rand.nextInt(card_names.length)];
+//                    cards.get(i).setCardType(name);
+//                }
+//            }
     }
 
 
@@ -119,7 +120,8 @@ public class Deck {
                 if (has_hovered && !has_selected) {
                     g2d.setColor(Color.WHITE);
                     //trqnva da se polzva game.scale ama mi dava 093283409128039 errora tuiche 3
-                    g2d.drawImage(indicator, (int) indicator_x * 3 - 24, 80 * 3, 24 * 3, 32 * 3, null);
+                    // /\ az go opravih xd, prosto slojih game.scale i ne crashva
+                    g2d.drawImage(indicator, (int) indicator_x * game.scale - 24, 80 * game.scale, 24 * game.scale, 32 * game.scale, null);
                 }
             }
     }

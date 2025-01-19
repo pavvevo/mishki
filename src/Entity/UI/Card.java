@@ -483,8 +483,7 @@ public class Card extends Entity {
             g2d.drawImage(tails_icon, x * scale + offset_x, notch_y, tails_icon.getWidth() * scale, tails_icon.getHeight() * scale, null);
             offset_x += tails_icon.getWidth() * scale + scale;
         }
-
-        //info //NE E GOTOVO DOBAVI TEKST I DRUGI NESHTA
+        //info
         if(game.input.isButton(MouseEvent.BUTTON3)) {
 
             my_deck.menu_open = true;

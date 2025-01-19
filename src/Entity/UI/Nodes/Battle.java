@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 public class Battle extends Node{
     public Battle(Game game, String name) {
         super(game, name);
-        setSprite(getImg("/Resources/UI/Map/map_icon_battle_gray.png"));
+        setSprite(getImg("/Resources/UI/Map/map_icon_battle.png"));
     }
     public String toString() {
         return " Battle ";
@@ -17,6 +17,15 @@ public class Battle extends Node{
     @Override
     public void update() {
         super.update();
-        setSprite(getImg("/Resources/UI/Map/map_icon_battle.png"));
+//        if(!isAvailable) {
+//            System.out.println("aaaa");
+//            setSprite(getImg("/Resources/UI/Map/map_icon_battle_gray.png"));
+//
+//        }
+//        else {
+//            setSprite(getImg("/Resources/UI/Map/map_icon_battle.png"));
+//        }
+
+
     }
 }

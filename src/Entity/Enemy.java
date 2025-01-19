@@ -56,7 +56,7 @@ public class Enemy extends Entity{
             default: case "Mouse":
                 setSprite(getImg("/Resources/Enemy/mouse.png"));
                 shadow = getImg("/Resources/Other/shadow.png");
-                max_health = 20;
+                max_health = 1;
                 block_power = 10;
                 damage = 6;
 
@@ -90,7 +90,10 @@ public class Enemy extends Entity{
 
         if(health <= 0) {
             dead = true;
-            game.State = game.State.MENU;
+            game.tosses = game.max_tosses;
+            game.State = game.State.MAP;
+            game.heads_mana = 0;
+            game.tails_mana = 0;
         }
 
         if(isHovered(game.input) && game.input.isButtonDown(MouseEvent.BUTTON1)) {

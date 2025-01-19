@@ -31,6 +31,7 @@ public class Node extends Entity {
         node.recievepath++;
     }
 
+
     public boolean isClicked() {
         if(game.input.isButton(MouseEvent.BUTTON1) && isAvailable == true && isHovered(game.input)) {
             return true;

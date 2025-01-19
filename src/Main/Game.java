@@ -15,6 +15,7 @@ import java.io.IOException;
 import Entity.UI.Button;
 import Entity.UI.Cursor;
 import Entity.UI.Nodes.Map;
+import Entity.UI.Other.Chest_State;
 
 public class Game extends JPanel implements Runnable {
     public final int scale = 3;
@@ -41,6 +42,7 @@ public class Game extends JPanel implements Runnable {
     BufferedImage bg;
     BufferedImage logo;
     BufferedImage map_bg;
+    BufferedImage chest_bg;
 
     Cursor cursor;
     public Input input;
@@ -49,6 +51,7 @@ public class Game extends JPanel implements Runnable {
     public Player player;
     public Enemy enemy;
     Map map;
+    Chest_State chest;
 
     public Entity selected_target;
     public boolean is_target_player = false;
@@ -76,25 +79,17 @@ public class Game extends JPanel implements Runnable {
     public void startGame() {
         try {
             bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/bg.png"));
-        } catch (IOException e) {
-            System.out.println("CANT LOAD BACKGROUND");
-        }
-
-        try {
-            logo = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/logo.png"));
-        } catch (IOException e) {
-            System.out.println("CANT LOAD LOGO");
-        }
-
-        try {
             map_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg.png"));
+            logo = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/logo.png"));
+            chest_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/chest_bg.png"));
         } catch (IOException e) {
-            System.out.println("CANT LOAD MAP BG");
+            System.out.println("CANT LOAD CERTAIN IMAGE");
         }
 
         buttonMenu = new Button(this, "Main Menu", 160, 140, 5, 2);
         input = new Input(this);
         map = new Map(this);
+        chest = new Chest_State(this);
         cursor = new Cursor(this);
         player = new Player(this);
         enemy = new Enemy(this, player);
@@ -105,7 +100,7 @@ public class Game extends JPanel implements Runnable {
         player.setup(40, 100);
         coin.setup(160, 75);
         map.setup();
-
+        chest.setup();
         has_started = true;
 
         gameThread = new Thread(this);
@@ -253,7 +248,6 @@ public class Game extends JPanel implements Runnable {
 
     public void update() {
         if(has_started) {
-
             selected_target = null;
             cursor.update();
 
@@ -273,7 +267,7 @@ public class Game extends JPanel implements Runnable {
                     map.update();
                     break;
                 case CHEST:
-                    //
+                    chest.update();
                     break;
                 case SHOP:
                     deck.update();
@@ -315,6 +309,9 @@ public class Game extends JPanel implements Runnable {
                     g2d.drawImage(map_bg, 0, 0, map_bg.getWidth() * scale, map_bg.getHeight() * scale, null);
                     deck.draw(g2d);
                     break;
+                case CHEST:
+                    g2d.drawImage(chest_bg, 0, 0, chest_bg.getWidth() * scale, chest_bg.getHeight() * scale, null);
+                    chest.draw(g2d);
             }
             cursor.draw(g2d);
         }
