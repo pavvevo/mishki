@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 public class Battle extends Node{
     public Battle(Game game, String name) {
         super(game, name);
-//        setSprite(getImg("/Resources/UI/Map/map_icon_battle_gray.png"));
+        setSprite(getImg("/Resources/UI/Map/map_icon_battle_gray.png"));
     }
     public String toString() {
         return " Battle ";

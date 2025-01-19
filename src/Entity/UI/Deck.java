@@ -41,6 +41,10 @@ public class Deck {
             "Magic Mush",
             "Rest",
             "Rusty Nail",
+            "Trample",
+            "Hidden Penny",
+            "Coin Trick",
+            "Tail Whip",
 
     };
 

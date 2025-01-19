@@ -27,7 +27,7 @@ public class Game extends JPanel implements Runnable {
         MAP,
         SHOP
     }
-    public STATE State = STATE.MAP;
+    public STATE State = STATE.MENU;
 
     final int FPS = 60;
 
@@ -38,6 +38,8 @@ public class Game extends JPanel implements Runnable {
     Button buttonMenu;
 
     BufferedImage bg;
+    BufferedImage logo;
+    int logo_sin;
 
     Cursor cursor;
     public Input input;
@@ -76,7 +78,14 @@ public class Game extends JPanel implements Runnable {
         } catch (IOException e) {
             System.out.println("CANT LOAD BACKGROUND");
         }
-        buttonMenu = new Button(this, "Main Menu", 100, 50, 5, 2);
+
+        try {
+            logo = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/logo.png"));
+        } catch (IOException e) {
+            System.out.println("CANT LOAD LOGO");
+        }
+
+        buttonMenu = new Button(this, "Main Menu", 160, 140, 5, 2);
         input = new Input(this);
         map = new Map(this);
         cursor = new Cursor(this);
@@ -280,6 +289,7 @@ public class Game extends JPanel implements Runnable {
                     break;
 
                 case MENU:
+                    g2d.drawImage(logo, 160 * scale - logo.getWidth() * scale / 2, 10 * scale, logo.getWidth() * scale, logo.getHeight() * scale, null);
                     buttonMenu.draw(g2d);
                     break;
                 case MAP:

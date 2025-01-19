@@ -15,6 +15,8 @@ public class Move extends Entity {
     String name;
     BufferedImage intent;
 
+    int display_number;
+
     public Move(Game game, Enemy owner, Entity target, String name) {
         this.game = game;
         this.owner = owner;
@@ -41,7 +43,7 @@ public class Move extends Entity {
         final_damage -= game.getBuffAmmount(owner, "Intimidate");
         final_damage += game.getBuffAmmount(owner, "Anger");
 
-        final_damage += max(0, final_damage);
+        final_damage = max(0, final_damage);
 
         switch(name) {
             default: case "Attack":
@@ -54,6 +56,8 @@ public class Move extends Entity {
                     target.health = total_hp;
                 }
 
+                display_number = final_damage;
+
                 owner.x -= 7 * scale;
                 owner.y += 2 * scale;
                 owner.xscale = 1.5;
@@ -65,6 +69,9 @@ public class Move extends Entity {
                 break;
             case "Block":
                 target.block += owner.block_power;
+
+                display_number = owner.block_power;
+
                 target.xscale = 0.5;
                 target.yscale = 1.5;
                 break;
@@ -73,5 +80,6 @@ public class Move extends Entity {
 
     public void draw(Graphics2D g2d) {
         g2d.drawImage(intent, owner.x * scale, owner.y * scale - 48 * scale, intent.getWidth() * scale, intent.getHeight() * scale, null);
+        g2d.setColor(Color.BLACK);
     }
 }

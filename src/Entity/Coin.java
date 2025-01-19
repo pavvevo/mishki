@@ -67,8 +67,14 @@ public class Coin extends Entity {
 
                 if(side == 0) {
                     game.tails_mana += 1;
+                    if(game.getBuffAmmount(game.player, "Hidden Penny") > 0) { game.heads_mana += 1; game.removeBuff(game.player, "Hidden Penny", 1);}
+                    if(game.getBuffAmmount(game.player, "Coin Trick") > 0) { game.tosses += 1; game.removeBuff(game.player, "Coin Trick", 1);}
+
                 } else {
                     game.heads_mana += 1;
+
+                    if(game.getBuffAmmount(game.player, "Hidden Penny") > 0) game.tails_mana += 1;
+
                     if(game.getBuffAmmount(game.player, "Heads Up") > 0) {
                         game.heads_mana += 1;
                         game.removeBuff(game.player, "Heads Up", 1);

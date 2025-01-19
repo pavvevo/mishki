@@ -7,6 +7,8 @@ import Main.Game;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
+import static java.lang.Math.sin;
+
 public class Button extends Entity {
 
     Game game;
@@ -26,14 +28,16 @@ public class Button extends Entity {
         lerp_y = y;
         switch(name) {
             default: case "Menu Button":
-                setSprite(getImg("/Resources/UI/Cards/card.png"));
+                setSprite(getImg("/Resources/UI/button_start.png"));
                 break;
         }
     }
 
     public void update() {
-        xscale = lerp(xscale, target_xscale, 0.1);
-        yscale = lerp(yscale, target_yscale, 0.1);
+        sin_timer += 1;
+        lil_sin = sin(sin_timer / 10) / 20;
+        xscale = lerp(xscale, target_xscale + lil_sin, 0.1);
+        yscale = lerp(yscale, target_yscale - lil_sin, 0.1);
 
         x = (int)lerp(x, lerp_x, 0.1);
         y = (int)lerp(y, lerp_y, 0.1);
@@ -45,8 +49,7 @@ public class Button extends Entity {
             if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
                 switch(name) {
                     default: case "Menu Button":
-                        game.State = game.State.GAME;
-                        game.startBattle();
+                        game.State = game.State.MAP;
                         break;
                 }
             }

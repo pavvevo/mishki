@@ -120,8 +120,8 @@ public class Card extends Entity {
                 cost_heads = 1;
                 card_icon = getImg("/Resources/UI/Cards/card_Intimidate.png");
                 cast_on_enemy = true;
-                description[0] = "Applies Intimidate debuff.";
-                description[1] = "Enemy deals 1 less damage per Intimidate.";
+                description[0] = "Applies 2 INTIMIDATE.";
+                description[1] = "Enemy deals 1 less damage per INTIMIDATE.";
                 description[2] = "Remove 1 per turn.";
 
                 break;
@@ -129,8 +129,8 @@ public class Card extends Entity {
                 cost_heads = 1;
                 card_icon = getImg("/Resources/UI/Cards/card_new_stick.png");
                 cast_on_self = true;
-                description[0] = "Gives 1 Stick buff.";
-                description[1] = "Stick gives you a +2 on all damage";
+                description[0] = "Gives 1 STICK.";
+                description[1] = "STICK gives you a +2 on all damage";
                 description[2] = "Remove 1 per turn.";
                 break;
             case "Sneak Strike":
@@ -148,8 +148,8 @@ public class Card extends Entity {
                 damage = 2;
                 description[0] = "Deals 2 Damage.";
                 description[1] = "Each time Dull Claw is played:";
-                description[2] = "times 2 Damage";
-                description[3] = "plus 1 Heads Cost.";
+                description[2] = "Times 2 Damage";
+                description[3] = "Plus 1 Heads Cost.";
                 break;
             case "Magic Mush":
                 cost_tails = 1;
@@ -171,9 +171,36 @@ public class Card extends Entity {
                 cast_on_enemy = true;
                 damage = 4;
                 description[0] = "Deals 4 Damage.";
-                description[1] = "Apply 2 Poison.";
+                description[1] = "Apply 2 POISON.";
                 description[2] = "Deals additional 2 Damage for each Buff or Debuff the Enemy has.";
-                description[3] = "Poison deals 2 Damage at the end of every Turn.";
+                description[3] = "POISON deals 2 Damage at the end of every Turn.";
+                break;
+            case "Trample":
+                cost_heads = 1;
+                card_icon = getImg("/Resources/UI/Cards/card_trample.png");
+                damage = 2;
+                cast_on_self = true;
+                description[0] = "Deals 1 Damage.";
+                description[1] = "Deal +1 Damage per 5 Missing Health on the Enemy.";
+                break;
+            case "Hidden Penny":
+                cost_tails = 1;
+                card_icon = getImg("/Resources/UI/Cards/card_hidden_penny.png");
+                cast_on_self = true;
+                description[0] = "Your next roll gives both Heads and Tails";
+                description[1] = "Cost +1 Tails";
+                break;
+            case "Coin Trick":
+                cost_heads = 1;
+                card_icon = getImg("/Resources/UI/Cards/card_coin_trick.png");
+                cast_on_self = true;
+                description[0] = "Next time you roll Tails gain another Roll";
+                break;
+            case "Tail Whip":
+                cost_heads = 1;
+                card_icon = getImg("/Resources/UI/Cards/card_tail_whip.png");
+                cast_on_enemy = true;
+                description[0] = "Deals Damage equel to your Block";
                 break;
         }
     }
@@ -271,12 +298,13 @@ public class Card extends Entity {
 
     public void castOnEnemy(Entity target) {
 
+            if(name == "Tail Whip") damage = game.player.block;
+
             int final_damage = damage;
             if(game.getBuffAmmount(game.player, "New Stick") > 0) {
                 final_damage += 2;
             }
             final_damage += game.getBuffAmmount(game.player, "Anger");
-
             final_damage = max(0, final_damage);
 
             int total_hp;
@@ -345,7 +373,38 @@ public class Card extends Entity {
                         target.health = total_hp;
                     }
 
+                    target.xscale = 1.5;
+                    target.yscale = 0.5;
+                    target.shake = 10;
+                    break;
+                case "Trample":
+                    final_damage += ceil((target.max_health - target.health) / 5);
+                    total_hp = target.health + target.block;
+                    total_hp -= final_damage;
+                    if(total_hp > target.max_health) {
+                        target.block = total_hp - target.max_health;
+                    } else {
+                        target.block = 0;
+                        target.health = total_hp;
+                    }
 
+                    target.xscale = 1.5;
+                    target.yscale = 0.5;
+                    target.shake = 10;
+                    break;
+                case "Tail Whip":
+                    total_hp = target.health + target.block;
+                    total_hp -= final_damage;
+                    if(total_hp > target.max_health) {
+                        target.block = total_hp - target.max_health;
+                    } else {
+                        target.block = 0;
+                        target.health = total_hp;
+                    }
+
+                    target.xscale = 1.5;
+                    target.yscale = 0.5;
+                    target.shake = 10;
                     break;
             }
     }
@@ -376,12 +435,21 @@ public class Card extends Entity {
                 };
 
                 String buff_name = buff_names[rand.nextInt(buff_names.length)];
-                game.addBuff(game.player, buff_name, rand.nextInt(3) + 1);
+                game.addBuff(game.player, buff_name, rand.nextInt(4) + 1);
                 break;
             case "Rest":
                 game.tosses = 0;
                 health += 6;
+                block += 5;
                 if(health > target.max_health) { health = target.max_health; }
+                break;
+            case "Hidden Penny":
+                game.addBuff(game.player, "Hidden Penny", 1);
+                cost_heads += 1;
+
+                break;
+            case "Coin Trick":
+                game.addBuff(game.player, "Coin Trick", 1);
                 break;
         }
     }
