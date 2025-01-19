@@ -59,7 +59,6 @@ public class Move extends Entity {
                 target.yscale = 0.5;
                 target.shake = 10;
 
-
                 break;
             case "Block":
                 target.block += owner.block_power;
