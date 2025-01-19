@@ -61,10 +61,10 @@ public class Enemy extends Entity{
                 block_power = 10;
                 damage = 6;
 
-                Move move_1 = new Move(game, this, player,"Attack");
-                moves.add(move_1);
-                Move move_2 = new Move(game, this, this,"Block");
-                moves.add(move_2);
+                Move attack_mouse = new Move(game, this, player,"Attack");
+                moves.add(attack_mouse);
+                Move block_mouse = new Move(game, this, this,"Block");
+                moves.add(block_mouse);
 
                 move_count = moves.size();
 
@@ -78,15 +78,33 @@ public class Enemy extends Entity{
 
                 game.addBuff(this, "Guard", 5);
 
-                Move move_fly = new Move(game, this, player,"Attack");
-                moves.add(move_fly);
-                Move move_block = new Move(game, this, this,"Block");
-                moves.add(move_block);
-                moves.add(move_block);
-                moves.add(move_block);
+                Move attack_fly = new Move(game, this, player,"Attack");
+                moves.add(attack_fly);
+                Move move_block_fly = new Move(game, this, this,"Block");
+                moves.add(move_block_fly);
+                moves.add(move_block_fly);
+                moves.add(move_block_fly);
 
                 move_count = moves.size();
                 break;
+            case "Boss":
+                setSprite(getImg("/Resources/Enemy/bear.png"));
+                max_health = 50;
+                block_power = 10;
+                block = 25;
+                damage = 20;
+
+                game.addBuff(this, "Guard", 5);
+                Move attack_bear = new Move(game, this, player,"Attack");
+                moves.add(attack_bear);
+                game.addBuff(this, "Poison", 2);
+                Move block_bear = new Move(game, this, this,"Block");
+
+                moves.add(block_bear);
+                moves.add(block_bear);
+                moves.add(block_bear);
+
+                move_count = moves.size();
             case "Tish":
                 //
                 break;

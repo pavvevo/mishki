@@ -167,10 +167,10 @@ public class Game extends JPanel implements Runnable {
         return 0;
     }
 
-    public void removeBuff(Entity target, String name, int ammount) {
+    public void removeBuff(Entity target, String name, int amount) {
         for(int i = 0; i < target.buffs.size(); i++) {
             if(target.buffs.get(i).name.equals(name)) {
-                target.buffs.get(i).remaining -= ammount;
+                target.buffs.get(i).remaining -= amount;
                 if(target.buffs.get(i).remaining <= 0) {
                     target.buffs.remove(i);
                     i -= 1;
