@@ -44,6 +44,8 @@ public class Game extends JPanel implements Runnable {
     BufferedImage map_bg;
     BufferedImage chest_bg;
 
+    public Card selected_card;
+
     Cursor cursor;
     public Input input;
     public Deck deck;
