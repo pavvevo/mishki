@@ -47,13 +47,9 @@ public class Move extends Entity {
 
         switch(name) {
             default: case "Attack":
-                int total_hp = target.health + target.block;
-                total_hp -= final_damage;
-                if(total_hp > target.max_health) {
-                    target.block = total_hp - target.max_health;
-                } else {
-                    target.block = 0;
-                    target.health = total_hp;
+                target.block -= final_damage;
+                if(target.block <= 0) {
+                    target.health += target.block;
                 }
 
                 display_number = final_damage;

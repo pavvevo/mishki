@@ -212,13 +212,6 @@ public class Card extends Entity {
 
     public void casting() {
         if(selected && game.input.isButtonUp(MouseEvent.BUTTON1)) {
-            System.out.println("Tails " + cost_tails);
-            System.out.println("Heads " + cost_heads);
-            System.out.println("Game Tails " + game.tails_mana);
-            System.out.println("Game Heads " + game.heads_mana);
-
-            System.out.println("Yep 1");
-
             if(game.tails_mana >= cost_tails && game.heads_mana >= cost_heads) {
                 boolean can_target = game.selected_target != null;
 
@@ -311,13 +304,9 @@ public class Card extends Entity {
 
             switch(name) {
                 case "Rock Throw":
-                    total_hp = target.health + target.block;
-                    total_hp -= final_damage;
-                    if(total_hp > target.max_health) {
-                        target.block = total_hp - target.max_health;
-                    } else {
-                        target.block = 0;
-                        target.health = total_hp;
+                    target.block -= final_damage;
+                    if(target.block <= 0) {
+                        target.health += target.block;
                     }
 
                     target.xscale = 1.5;
@@ -330,14 +319,10 @@ public class Card extends Entity {
 
                     break;
                 case "Sneak Strike":
-                    total_hp = target.health + target.block;
-                    if(target.block > 0) total_hp -= final_damage;
-                    total_hp -= final_damage;
-                    if(total_hp > target.max_health) {
-                        target.block = total_hp - target.max_health;
-                    } else {
-                        target.block = 0;
-                        target.health = total_hp;
+                    target.block -= final_damage;
+                    if(target.block >= 0) target.block -= final_damage;
+                    if(target.block <= 0) {
+                        target.health += target.block;
                     }
 
                     target.xscale = 1.5;
@@ -345,16 +330,13 @@ public class Card extends Entity {
                     target.shake = 10;
                     break;
                 case "Dull Claw":
-                    total_hp = target.health + target.block;
-                    total_hp -= final_damage;
+                    target.block -= final_damage;
+                    if(target.block <= 0) {
+                        target.health += target.block;
+                    }
+
                     damage *= 2;
                     cost_heads += 1;
-                    if(total_hp > target.max_health) {
-                        target.block = total_hp - target.max_health;
-                    } else {
-                        target.block = 0;
-                        target.health = total_hp;
-                    }
 
                     target.xscale = 1.5;
                     target.yscale = 0.5;
@@ -362,15 +344,11 @@ public class Card extends Entity {
                     break;
                 case "Rusty Nail":
                     game.addBuff(target, "Poison", 2);
-
                     final_damage += target.buffs.size() * 2;
-                    total_hp = target.health + target.block;
-                    total_hp -= final_damage;
-                    if(total_hp > target.max_health) {
-                        target.block = total_hp - target.max_health;
-                    } else {
-                        target.block = 0;
-                        target.health = total_hp;
+
+                    target.block -= final_damage;
+                    if(target.block <= 0) {
+                        target.health += target.block;
                     }
 
                     target.xscale = 1.5;
@@ -379,13 +357,9 @@ public class Card extends Entity {
                     break;
                 case "Trample":
                     final_damage += ceil((target.max_health - target.health) / 5);
-                    total_hp = target.health + target.block;
-                    total_hp -= final_damage;
-                    if(total_hp > target.max_health) {
-                        target.block = total_hp - target.max_health;
-                    } else {
-                        target.block = 0;
-                        target.health = total_hp;
+                    target.block -= final_damage;
+                    if(target.block <= 0) {
+                        target.health += target.block;
                     }
 
                     target.xscale = 1.5;
@@ -393,13 +367,9 @@ public class Card extends Entity {
                     target.shake = 10;
                     break;
                 case "Tail Whip":
-                    total_hp = target.health + target.block;
-                    total_hp -= final_damage;
-                    if(total_hp > target.max_health) {
-                        target.block = total_hp - target.max_health;
-                    } else {
-                        target.block = 0;
-                        target.health = total_hp;
+                    target.block -= final_damage;
+                    if(target.block <= 0) {
+                        target.health += target.block;
                     }
 
                     target.xscale = 1.5;
@@ -438,10 +408,10 @@ public class Card extends Entity {
                 game.addBuff(game.player, buff_name, rand.nextInt(4) + 1);
                 break;
             case "Rest":
+                target.health += 6;
+                target.block += 5;
+                if(target.health > target.max_health) { target.health = target.max_health; }
                 game.tosses = 0;
-                health += 6;
-                block += 5;
-                if(health > target.max_health) { health = target.max_health; }
                 break;
             case "Hidden Penny":
                 game.addBuff(game.player, "Hidden Penny", 1);
