@@ -27,7 +27,7 @@ public class Game extends JPanel implements Runnable {
         MAP,
         SHOP
     }
-    public STATE State = STATE.MAP;
+    public STATE State = STATE.GAME;
 
     final int FPS = 60;
 
@@ -114,7 +114,7 @@ public class Game extends JPanel implements Runnable {
         boolean updated = false;
         for(int i = 0; i < target.buffs.size(); i++) {
             if(target.buffs.get(i).name.equals(name)) {
-                target.buffs.get(i).remaining += 1;
+                target.buffs.get(i).remaining += ammount;
                 updated = true;
             }
         }
@@ -166,6 +166,18 @@ public class Game extends JPanel implements Runnable {
             coin.vsp = 10;
             player.block = 0;
             tosses = max_tosses;
+
+            removeBuff(enemy, "Intimidate", 1);
+
+            if(getBuffAmmount(player, "Poison") > 0) {
+                player.health -= 2;
+                removeBuff(player, "Poison", 1);
+            }
+
+            if(getBuffAmmount(enemy, "Poison") > 0) {
+                enemy.health -= 2;
+                removeBuff(enemy, "Poison", 1);
+            }
         }
 
         //to enemy

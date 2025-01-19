@@ -6,6 +6,7 @@ import Entity.Player;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +26,20 @@ public class Deck {
 
     Random rand;
 
+    public boolean menu_open = false;
+
     public boolean inspect_enabled = false;
+    String[] card_names = {
+            "Rock Throw",
+            "Tail Defence",
+            "Heads Up",
+            "Heads Down",
+            "Intimidate",
+            "New Stick",
+            "Sneak Strike",
+            "Dull Claw",
+            "Magic Mush"
+    };
 
     Game game;
     Player player;
@@ -35,13 +49,12 @@ public class Deck {
         this.game = game;
         player = game.player;
 
+        rand = new Random();
+
         cards = new ArrayList<Card>();
         for(int i = 0; i < size; i++) {
             String name = "";
-            if(i == 0) name = "Rock Throw";
-            if(i == 1) name = "Tail Defence";
-            if(i == 2) name = "Heads Down";
-            if(i == 3) name = "Heads Up";
+            name = card_names[rand.nextInt(card_names.length)];
             Card new_card = new Card(game, name);
             new_card.x = 116 + 42 * i;
             new_card.y = 300 + 100 * i;
@@ -59,12 +72,21 @@ public class Deck {
     }
 
     public void update() {
+        menu_open = false;
         has_hovered = false;
         for(int i = 0; i < size; i++) {
             cards.get(i).update();
         }
 
         indicator_x = lerp(indicator_x, lerp_x, 0.1);
+
+        if(game.input.isButtonDown(MouseEvent.BUTTON2)) {
+            for(int i = 0; i < size; i++) {
+                String name = "";
+                name = card_names[rand.nextInt(card_names.length)];
+                cards.get(i).setCardType(name);
+            }
+        }
     }
 
 
@@ -81,7 +103,7 @@ public class Deck {
             selectedCard.draw(g2d);
         }
 
-        if(inspect_enabled) {
+        if(menu_open) {
             if (has_hovered && !has_selected) {
                 g2d.setColor(Color.WHITE);
                 //trqnva da se polzva game.scale ama mi dava 093283409128039 errora tuiche 3

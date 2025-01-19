@@ -45,6 +45,9 @@ public class Player extends Entity {
         xscale = lerp(xscale, 1.0 + lil_sin, 0.1);
         yscale = lerp(yscale, 1.0 - lil_sin, 0.1);
 
+        if(shake > 0) shake -= 0.5;
+        else shake = 0;
+
         if(health <= 0) {
             game.resetGame();
         }

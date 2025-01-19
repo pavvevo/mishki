@@ -35,10 +35,13 @@ public class Move extends Entity {
 
     public void trigger() {
 
+        int final_damage = owner.damage;
+        final_damage -= game.getBuffAmmount(owner, "Intimidate");
+
         switch(name) {
             default: case "Attack":
                 int total_hp = target.health + target.block;
-                total_hp -= owner.damage;
+                total_hp -= final_damage;
                 if(total_hp > target.max_health) {
                     target.block = total_hp - target.max_health;
                 } else {

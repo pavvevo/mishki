@@ -12,6 +12,8 @@ public class Buff extends Entity {
     Game game;
     public int remaining = 1;
 
+
+
     public Buff(Game game, String name) {
         this.game = game;
         this.name = name;
@@ -20,7 +22,22 @@ public class Buff extends Entity {
     public void setBuff() {
         switch(name) {
             case "Heads Up":
-                icon = getImg("/Resources/UI/Battle/buff_heads_up.png");
+                icon = getImg("/Resources/UI/Battle/Buffs/buff_heads_up.png");
+                break;
+            case "Intimidate":
+                icon = getImg("/Resources/UI/Battle/Buffs/buff_intimidate.png");
+                break;
+            case "New Stick":
+                icon = getImg("/Resources/UI/Battle/Buffs/buff_new_stick.png");
+                break;
+            case "Guard":
+                icon = getImg("/Resources/UI/Battle/Buffs/buff_guard.png");
+                break;
+            case "Anger":
+                icon = getImg("/Resources/UI/Battle/Buffs/buff_anger.png");
+                break;
+            case "Poison":
+                icon = getImg("/Resources/UI/Battle/Buffs/buff_poison.png");
                 break;
         }
     }

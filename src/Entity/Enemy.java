@@ -56,9 +56,9 @@ public class Enemy extends Entity{
             default: case "Mouse":
                 setSprite(getImg("/Resources/Enemy/mouse.png"));
                 shadow = getImg("/Resources/Other/shadow.png");
-                max_health = 12;
+                max_health = 20;
                 block_power = 10;
-                damage = 5;
+                damage = 6;
 
                 Move move_1 = new Move(game, this, player,"Attack");
                 moves.add(move_1);
