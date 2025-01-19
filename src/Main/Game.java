@@ -25,9 +25,10 @@ public class Game extends JPanel implements Runnable {
         GAME,
         MENU,
         MAP,
-        SHOP
+        SHOP,
+        CHEST
     }
-    public STATE State = STATE.MENU;
+    public STATE State = STATE.SHOP;
 
     final int FPS = 60;
 
@@ -39,7 +40,7 @@ public class Game extends JPanel implements Runnable {
 
     BufferedImage bg;
     BufferedImage logo;
-    int logo_sin;
+    BufferedImage map_bg;
 
     Cursor cursor;
     public Input input;
@@ -83,6 +84,12 @@ public class Game extends JPanel implements Runnable {
             logo = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/logo.png"));
         } catch (IOException e) {
             System.out.println("CANT LOAD LOGO");
+        }
+
+        try {
+            map_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg.png"));
+        } catch (IOException e) {
+            System.out.println("CANT LOAD MAP BG");
         }
 
         buttonMenu = new Button(this, "Main Menu", 160, 140, 5, 2);
@@ -261,8 +268,15 @@ public class Game extends JPanel implements Runnable {
                 case MENU:
                     buttonMenu.update();
                 break;
+
                 case MAP:
                     map.update();
+                    break;
+                case CHEST:
+                    //
+                    break;
+                case SHOP:
+                    deck.update();
 
             }
 
@@ -289,11 +303,18 @@ public class Game extends JPanel implements Runnable {
                     break;
 
                 case MENU:
+                    g2d.drawImage(map_bg, 0, 0, map_bg.getWidth() * scale, map_bg.getHeight() * scale, null);
                     g2d.drawImage(logo, 160 * scale - logo.getWidth() * scale / 2, 10 * scale, logo.getWidth() * scale, logo.getHeight() * scale, null);
                     buttonMenu.draw(g2d);
                     break;
                 case MAP:
+                    g2d.drawImage(map_bg, 0, 0, map_bg.getWidth() * scale, map_bg.getHeight() * scale, null);
                     map.draw(g2d);
+                    break;
+                case SHOP:
+                    g2d.drawImage(map_bg, 0, 0, map_bg.getWidth() * scale, map_bg.getHeight() * scale, null);
+                    deck.draw(g2d);
+                    break;
             }
             cursor.draw(g2d);
         }

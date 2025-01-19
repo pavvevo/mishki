@@ -540,6 +540,10 @@ public class Card extends Entity {
                 for( int i=0; i < description.length; i++ ) {
                     g2d.drawString(description[i], 20 * scale, 40 * scale + i * 10 * scale );
                 }
+
+                if(my_deck.at_shop) {
+                    my_deck.tooltipCard = this;
+                }
             }
         }
 
