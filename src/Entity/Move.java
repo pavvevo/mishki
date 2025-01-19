@@ -54,8 +54,6 @@ public class Move extends Entity {
 
                 display_number = final_damage;
 
-                owner.x -= 7 * scale;
-                owner.y += 2 * scale;
                 owner.xscale = 1.5;
                 owner.yscale = 0.5;
                 target.xscale = 1.5;
