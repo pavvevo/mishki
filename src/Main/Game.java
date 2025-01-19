@@ -27,7 +27,7 @@ public class Game extends JPanel implements Runnable {
         MAP,
         SHOP
     }
-    public STATE State = STATE.GAME;
+    public STATE State = STATE.MAP;
 
     final int FPS = 60;
 

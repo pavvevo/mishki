@@ -3,20 +3,24 @@ package Entity.UI.Nodes;
 import Entity.UI.Card;
 import Main.Game;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 import java.util.Random;
 public class Map {
+    List<Node> connectionlist;
     Node[][] m = new Node[10][5];
     Game game;
     int nodeX, nodeY;
+    int playerclickbr = 0;
     public Map(Game game) {
         this.game = game;
     }
     public void setup() {
-
+        connectionlist = new ArrayList<Node>();
         nodeX = 220/m[9].length/3 * game.scale;
         nodeY = 180/m.length/9 * game.scale;
-        m[9][2] = new Boss(game);
+        m[9][2] = new Boss(game, "Boss");
         createNodes(m);
         for(int i = m.length-1; i >= 0; i--) {
             for(int j = 0; j < m[i].length; j++) {
@@ -68,7 +72,7 @@ public class Map {
         }
     }
     public Node battleNode() {
-        Battle k1 = new Battle(game);
+        Battle k1 = new Battle(game, "Battle");
         return k1;
     }
     public Node ifDoNode1stLevel() {
@@ -93,15 +97,15 @@ public Node ifDoNode() {
         Random random = new Random();
         int randomNumber = random.nextInt(100 + 1 - 2) + 2;
         if(randomNumber < 75) {
-            Battle k1 = new Battle(game);
+            Battle k1 = new Battle(game, "Battle");
             return k1;
         }
         else if(randomNumber <= 90 && randomNumber >= 75) {
-            Shop k2 = new Shop(game);
+            Shop k2 = new Shop(game, "Shop");
             return k2;
         }
         else if(randomNumber > 90) {
-            Chest k3 = new Chest(game);
+            Chest k3 = new Chest(game, "Chest");
             return k3;
         }
         return null;
@@ -124,6 +128,7 @@ public Node ifDoNode() {
                         }
                         else {
                             m[i][j].addConnection(m[checkDistX(m[i][j], m, i)][checkDistY(m[i][j], m, i)]);
+
                         }
 
                     }
@@ -161,11 +166,11 @@ public Node ifDoNode() {
         }
     }
     public void pathsDown(Node[][] m) {
-        for(int i = 0; i < m.length-1; i++) {
+        for(int i = 1; i < m.length-1; i++) {
             for (int j = 0; j < m[i].length; j++) {
                 if(m[i][j] != null) {
-                    if(m[i][j].recievepath < 1) {
-                        m[i][j].addConnection(m     [checkDistX(m[i][j], m, -i)]     [checkDistY(m[i][j], m, -i)]         );
+                    if(m[i][j].recievepath == 0) {
+                        m[checkDistX(m[i][j], m, -i)]     [checkDistY(m[i][j], m, -i)].addConnection(m[i][j]);
                     }
                 }
             }
@@ -255,13 +260,54 @@ public Node ifDoNode() {
         for(int i = 0; i < m.length; i++) {
             for (int j = 0; j < m[i].length; j++) {
                 if(m[i][j] != null) {
-                    m[i][j].update(g2d);
+                    m[i][j].draw2(g2d);
                 }
             }
         }
 
     }
     public void update() {
+        if(playerclickbr == 0) {
+            for (int j = 0; j < m[9].length; j++) {
+                if (m[0][j] != null) {
+                    m[0][j].update();
+                    m[0][j].isAvailable = true;
+                    if(m[0][j].isClicked()) {
+                        playerClick(m[0][j]);
+                    }
+                }
+            }
+        }
+        else {
+            for(int i = 0; i < connectionlist.size(); i++) {
+                connectionlist.get(i).update();
+                connectionlist.get(i).isAvailable = true;
+                if(connectionlist.get(i).isClicked()) {
+
+                    playerClick(connectionlist.get(i));
+                }
+            }
+        }
+    }
+    public void playerClick(Node node) {
+        playerclickbr++;
+        node.isAvailable = false;
+        node.xscale = 1;
+        node.yscale = 1;
+        connectionlist = node.getConnections();
+        switch(node.name) {
+            case "Battle":
+                game.startBattle();
+//                game.State = Game.STATE.GAME;
+                break;
+            case "Boss":
+                break;
+            case "Shop":
+                break;
+            case "Chest":
+                break;
+
+        }
 
     }
 }

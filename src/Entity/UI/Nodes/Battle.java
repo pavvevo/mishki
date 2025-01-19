@@ -6,12 +6,17 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Battle extends Node{
-    String name = "Battle";
-    public Battle(Game game) {
-        super(game);
-        setSprite(getImg("/Resources/UI/Map/map_icon_battle.png"));
+    public Battle(Game game, String name) {
+        super(game, name);
+//        setSprite(getImg("/Resources/UI/Map/map_icon_battle_gray.png"));
     }
     public String toString() {
         return " Battle ";
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        setSprite(getImg("/Resources/UI/Map/map_icon_battle.png"));
     }
 }
