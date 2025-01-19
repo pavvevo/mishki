@@ -48,6 +48,12 @@ public class ShopCards extends Entity {
         card_3.in_shop = true;
     }
 
+    public void newCards() {
+        card_1.setCardType(deck.getRandomCardName());
+        card_2.setCardType(deck.getRandomCardName());
+        card_3.setCardType(deck.getRandomCardName());
+    }
+
     public void update() {
 
         sin_timer += 1;
@@ -61,8 +67,6 @@ public class ShopCards extends Entity {
     }
 
     public void draw(Graphics2D g2d) {
-
-
         width = (int)(xscale * twinkle.getWidth() * scale);
         height = (int)(yscale * twinkle.getHeight() * scale);
         g2d.drawImage(twinkle, 160 * scale -width / 2, 60 * scale-height / 2, width, height, null);
