@@ -15,13 +15,11 @@ import java.util.Random;
 
 public class Deck {
     List<Card> cards;
-    List<Card> shop_cards;
     public int size;
 
     public boolean has_selected;
     public boolean has_hovered;
     Card selectedCard;
-    Card tooltipCard;
     BufferedImage indicator;
     public double indicator_x;
     public double lerp_x;
@@ -75,30 +73,6 @@ public class Deck {
             cards.add(new_card);
         }
 
-        shop_cards = new ArrayList<>();
-        for(int i = 0; i < 6; i++) {
-            String name = "";
-            name = card_names[rand.nextInt(card_names.length)];
-            Card new_card = new Card(game, name);
-
-            int spacing_x = 60;
-            int spacing_y = 70;
-
-            if(i >= 3) {
-                new_card.x = 100 + spacing_x * (i - 3);
-                new_card.y = 50;
-                new_card.y += spacing_y;
-            } else {
-                new_card.x = 50 + spacing_x * i;
-                new_card.y = 50;
-            }
-
-            new_card.lerp_y = new_card.y;
-            new_card.sin_timer = i * 20;
-            new_card.my_deck = this;
-            shop_cards.add(new_card);
-        }
-
         try {
             indicator = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/indicator.png"));
         } catch (IOException e) {
@@ -109,13 +83,6 @@ public class Deck {
     public void update() {
         menu_open = false;
         has_hovered = false;
-        Card tooltipCard = null;
-
-        if(at_shop) {
-            for(int i = 0; i < 6; i++) {
-                shop_cards.get(i).update();
-            }
-        } else {
 
             for (int i = 0; i < size; i++) {
                 cards.get(i).update();
@@ -130,7 +97,6 @@ public class Deck {
                     cards.get(i).setCardType(name);
                 }
             }
-        }
     }
 
 
@@ -139,7 +105,6 @@ public class Deck {
     }
 
     public void draw(Graphics2D g2d) {
-        if(!at_shop) {
             for (int i = size - 1; i >= 0; i--) {
                 cards.get(i).draw(g2d);
             }
@@ -155,18 +120,5 @@ public class Deck {
                     g2d.drawImage(indicator, (int) indicator_x * 3 - 24, 80 * 3, 24 * 3, 32 * 3, null);
                 }
             }
-        } else {
-            for (int i = 5; i >= 0; i--) {
-                shop_cards.get(i).draw(g2d);
-            }
-
-            if (has_selected) {
-                selectedCard.draw(g2d);
-            }
-
-            if(tooltipCard != null) {
-                tooltipCard.draw(g2d);
-            }
-        }
     }
 }
