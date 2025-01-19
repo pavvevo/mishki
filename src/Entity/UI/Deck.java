@@ -101,6 +101,9 @@ public class Deck {
             }
     }
 
+    public String getRandomCardName() {
+        return card_names[rand.nextInt(card_names.length)];
+    }
 
     public double lerp(double a, double b, double f) {
         return (a * (1.0 - f)) + (b * f);

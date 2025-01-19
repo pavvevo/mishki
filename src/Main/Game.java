@@ -15,6 +15,8 @@ import java.io.IOException;
 import Entity.UI.Button;
 import Entity.UI.Cursor;
 import Entity.UI.Nodes.Map;
+import Entity.UI.Nodes.Shop;
+import Entity.UI.Other.ShopCards;
 
 public class Game extends JPanel implements Runnable {
     public final int scale = 3;
@@ -28,7 +30,7 @@ public class Game extends JPanel implements Runnable {
         SHOP,
         CHEST
     }
-    public STATE State = STATE.MENU;
+    public STATE State = STATE.SHOP;
 
     final int FPS = 60;
 
@@ -37,10 +39,12 @@ public class Game extends JPanel implements Runnable {
 
     //neshta
     Button buttonMenu;
+    Button buttonMap;
 
     BufferedImage bg;
     BufferedImage logo;
     BufferedImage map_bg;
+    BufferedImage shop_bg;
 
     Cursor cursor;
     public Input input;
@@ -49,9 +53,11 @@ public class Game extends JPanel implements Runnable {
     public Player player;
     public Enemy enemy;
     Map map;
+    ShopCards shop;
 
     public Entity selected_target;
     public boolean is_target_player = false;
+    public Card selected_card;
 
     public int tails_mana = 0;
     public int heads_mana = 0;
@@ -92,6 +98,12 @@ public class Game extends JPanel implements Runnable {
             System.out.println("CANT LOAD MAP BG");
         }
 
+        try {
+            shop_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/shop_bg.png"));
+        } catch (IOException e) {
+            System.out.println("CANT LOAD SHOP BG");
+        }
+
         buttonMenu = new Button(this, "Main Menu", 160, 140, 5, 2);
         input = new Input(this);
         map = new Map(this);
@@ -105,6 +117,9 @@ public class Game extends JPanel implements Runnable {
         player.setup(40, 100);
         coin.setup(160, 75);
         map.setup();
+        shop = new ShopCards(this);
+        buttonMap = new Button(this, "Map", 40, 140, 5, 2);
+
 
         has_started = true;
 
@@ -271,12 +286,15 @@ public class Game extends JPanel implements Runnable {
 
                 case MAP:
                     map.update();
+                    buttonMap.update();
                     break;
                 case CHEST:
                     //
                     break;
                 case SHOP:
                     deck.update();
+                    shop.update();
+                    buttonMap.update();
 
             }
 
@@ -312,8 +330,10 @@ public class Game extends JPanel implements Runnable {
                     map.draw(g2d);
                     break;
                 case SHOP:
-                    g2d.drawImage(map_bg, 0, 0, map_bg.getWidth() * scale, map_bg.getHeight() * scale, null);
+                    g2d.drawImage(shop_bg, 0, 0, shop_bg.getWidth() * scale, shop_bg.getHeight() * scale, null);
+                    shop.draw(g2d);
                     deck.draw(g2d);
+                    buttonMap.draw(g2d);
                     break;
             }
             cursor.draw(g2d);

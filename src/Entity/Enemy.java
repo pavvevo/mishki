@@ -90,7 +90,7 @@ public class Enemy extends Entity{
 
         if(health <= 0) {
             dead = true;
-            game.State = game.State.MENU;
+            game.State = game.State.SHOP;
         }
 
         if(isHovered(game.input) && game.input.isButtonDown(MouseEvent.BUTTON1)) {

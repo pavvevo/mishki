@@ -14,7 +14,9 @@ import static java.lang.Math.*;
 
 public class Card extends Entity {
     Game game;
-    Deck my_deck;
+    public Deck my_deck;
+
+    public boolean in_shop = true;
 
     boolean selected = false;
 
@@ -83,6 +85,8 @@ public class Card extends Entity {
         description[2] = "";
         description[3] = "";
         description[4] = "";
+
+        if(name != "") selectable = true;
 
         switch(card_type) {
             default: case "":
@@ -208,6 +212,25 @@ public class Card extends Entity {
     public void update() {
         casting();
         visual();
+
+        if(isHovered(game.input)) {
+            game.selected_card = this;
+
+            if(in_shop) {
+                if(game.input.isButtonUp(MouseEvent.BUTTON1)) {
+                    if (my_deck.selectedCard != null) {
+                        String temp_name = name;
+                        setCardType(my_deck.selectedCard.name);
+                        my_deck.selectedCard.setCardType(temp_name);
+
+                        xscale = 1.5;
+                        yscale = 0.5;
+                        my_deck.selectedCard.xscale = 0.5;
+                        my_deck.selectedCard.yscale = 1.5;
+                    }
+                }
+            }
+        }
     }
 
     public void casting() {
