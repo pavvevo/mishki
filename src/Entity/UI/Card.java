@@ -10,8 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
 
-import static java.lang.Math.atan2;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 
 public class Card extends Entity {
     Game game;
@@ -33,7 +32,13 @@ public class Card extends Entity {
 
     BufferedImage card_icon;
 
-    String description;
+    String[] description = {
+            "",
+            "",
+            "",
+            "",
+            ""
+    };
 
     public  boolean selectable = true;
     public int cost_heads = 0;
@@ -72,6 +77,13 @@ public class Card extends Entity {
         cast_on_self = false;
         damage = 0;
 
+        description = new String[5];
+        description[0] = "";
+        description[1] = "";
+        description[2] = "";
+        description[3] = "";
+        description[4] = "";
+
         switch(card_type) {
             default: case "":
                 selectable = false;
@@ -82,53 +94,86 @@ public class Card extends Entity {
                 card_icon = getImg("/Resources/UI/Cards/card_rock_throw.png");
                 damage = 4;
                 cast_on_enemy = true;
-                description = "Deals 4 Damage. Costs 1 Head.";
+                description[0] = "Deals 4 Damage.";
                 break;
             case "Tail Defence":
                 cost_tails = 1;
                 card_icon = getImg("/Resources/UI/Cards/card_tail_defence.png");
                 cast_on_self = true;
-                description = "Gives 4 Block. Block disappears at the start of your next turn. Costs 1 Tails.";
+                description[0] = "Gives 4 Block.";
+                description[1] = "Block disappears at the start of your next turn.";
                 break;
             case "Heads Down":
                 cost_tails = 1;
                 card_icon = getImg("/Resources/UI/Cards/card_heads_down.png");
                 cast_on_self = true;
-                description = "Converts all of your Heads into Tails + 1. Costs 1 Tails.";
+                description[0] = "Converts all of your Heads into Tails + 1.";
                 break;
             case "Heads Up":
                 cost_tails = 2;
                 card_icon = getImg("/Resources/UI/Cards/card_heads_up.png");
                 cast_on_self = true;
-                description = "Grants x2 Buff. The next Heads you roll gives 2 Heads. Costs 2 Tails.";
+                description[0] = "Grants x2 Buff.";
+                description[1] = "The next Heads you roll gives 2 Heads.";
                 break;
             case "Intimidate":
                 cost_heads = 1;
                 card_icon = getImg("/Resources/UI/Cards/card_Intimidate.png");
                 cast_on_enemy = true;
-                description = "Applies Intimidate debuff. Enemy deals 1 less damage per Intimidate. \n Remove 1 per turn. \n Costs 1 Heads";
+                description[0] = "Applies Intimidate debuff.";
+                description[1] = "Enemy deals 1 less damage per Intimidate.";
+                description[2] = "Remove 1 per turn.";
+
                 break;
             case "New Stick":
                 cost_heads = 1;
                 card_icon = getImg("/Resources/UI/Cards/card_new_stick.png");
                 cast_on_self = true;
+                description[0] = "Gives 1 Stick buff.";
+                description[1] = "Stick gives you a +2 on all damage";
+                description[2] = "Remove 1 per turn.";
                 break;
             case "Sneak Strike":
                 cost_heads = 1;
                 card_icon = getImg("/Resources/UI/Cards/card_sneak_strike.png");
                 cast_on_enemy = true;
                 damage = 3;
+                description[0] = "Deals 3 Damage.";
+                description[1] = "If Enemy has any Block, double the damage";
                 break;
             case "Dull Claw":
                 cost_heads = 0;
                 card_icon = getImg("/Resources/UI/Cards/card_dull_claw.png");
                 cast_on_enemy = true;
                 damage = 2;
+                description[0] = "Deals 2 Damage.";
+                description[1] = "Each time Dull Claw is played:";
+                description[2] = "times 2 Damage";
+                description[3] = "plus 1 Heads Cost.";
                 break;
             case "Magic Mush":
                 cost_tails = 1;
                 card_icon = getImg("/Resources/UI/Cards/card_magic_mush.png");
                 cast_on_self = true;
+                description[0] = "Gives Random Buff?";
+                break;
+            case "Rest":
+                cost_tails = 2;
+                card_icon = getImg("/Resources/UI/Cards/card_rest.png");
+                cast_on_self = true;
+                description[0] = "Gives 5 Block.";
+                description[1] = "Heal 6 Health.";
+                description[2] = "End Turn.";
+                break;
+            case "Rusty Nail":
+                cost_heads = 2;
+                card_icon = getImg("/Resources/UI/Cards/card_rusty_nail.png");
+                cast_on_enemy = true;
+                damage = 4;
+                description[0] = "Deals 4 Damage.";
+                description[1] = "Apply 2 Poison.";
+                description[2] = "Deals additional 2 Damage for each Buff or Debuff the Enemy has.";
+                description[3] = "Poison deals 2 Damage at the end of every Turn.";
                 break;
         }
     }
@@ -140,6 +185,13 @@ public class Card extends Entity {
 
     public void casting() {
         if(selected && game.input.isButtonUp(MouseEvent.BUTTON1)) {
+            System.out.println("Tails " + cost_tails);
+            System.out.println("Heads " + cost_heads);
+            System.out.println("Game Tails " + game.tails_mana);
+            System.out.println("Game Heads " + game.heads_mana);
+
+            System.out.println("Yep 1");
+
             if(game.tails_mana >= cost_tails && game.heads_mana >= cost_heads) {
                 boolean can_target = game.selected_target != null;
 
@@ -151,15 +203,13 @@ public class Card extends Entity {
                 }
 
                 if (can_target) {
-
+                    game.tails_mana -= cost_tails;
+                    game.heads_mana -= cost_heads;
                     if (!game.is_target_player) {
                         castOnEnemy(game.selected_target);
                     } else {
                         castOnSelf(game.selected_target);
                     }
-
-                    game.tails_mana -= cost_tails;
-                    game.heads_mana -= cost_heads;
                 }
             }
         }
@@ -225,6 +275,9 @@ public class Card extends Entity {
             if(game.getBuffAmmount(game.player, "New Stick") > 0) {
                 final_damage += 2;
             }
+            final_damage += game.getBuffAmmount(game.player, "Anger");
+
+            final_damage = max(0, final_damage);
 
             int total_hp;
 
@@ -266,7 +319,7 @@ public class Card extends Entity {
                 case "Dull Claw":
                     total_hp = target.health + target.block;
                     total_hp -= final_damage;
-                    damage += 2;
+                    damage *= 2;
                     cost_heads += 1;
                     if(total_hp > target.max_health) {
                         target.block = total_hp - target.max_health;
@@ -278,6 +331,21 @@ public class Card extends Entity {
                     target.xscale = 1.5;
                     target.yscale = 0.5;
                     target.shake = 10;
+                    break;
+                case "Rusty Nail":
+                    game.addBuff(target, "Poison", 2);
+
+                    final_damage += target.buffs.size() * 2;
+                    total_hp = target.health + target.block;
+                    total_hp -= final_damage;
+                    if(total_hp > target.max_health) {
+                        target.block = total_hp - target.max_health;
+                    } else {
+                        target.block = 0;
+                        target.health = total_hp;
+                    }
+
+
                     break;
             }
     }
@@ -309,6 +377,11 @@ public class Card extends Entity {
 
                 String buff_name = buff_names[rand.nextInt(buff_names.length)];
                 game.addBuff(game.player, buff_name, rand.nextInt(3) + 1);
+                break;
+            case "Rest":
+                game.tosses = 0;
+                health += 6;
+                if(health > target.max_health) { health = target.max_health; }
                 break;
         }
     }
@@ -362,7 +435,7 @@ public class Card extends Entity {
 
         //notchove
         int offset_x = -(int)((tails_icon.getWidth() * scale + scale) * (cost_tails + cost_heads) / 2);
-        int notch_y = (y + (int)y_offset) * scale - height / 2 + 4 * scale;
+        int notch_y = (y + (int)y_offset) * scale - height / 2 - 4 * scale;
         for(int i = 0; i < cost_heads; i++) {
             g2d.drawImage(heads_icon, x * scale + offset_x, notch_y, heads_icon.getWidth() * scale, heads_icon.getHeight() * scale, null);
             offset_x += heads_icon.getWidth() * scale + scale;
@@ -393,8 +466,12 @@ public class Card extends Entity {
                 g2d.fillRect(10 * scale + offset / 2, 10 * scale + offset / 2, rect_width - offset, rect_height - offset);
 
                 g2d.setColor(Color.BLACK);
+
                 g2d.drawString(name, 20 * scale, 20 * scale);
-                g2d.drawString(description, 20 * scale, 40 * scale);
+
+                for( int i=0; i < description.length; i++ ) {
+                    g2d.drawString(description[i], 20 * scale, 40 * scale + i * 10 * scale );
+                }
             }
         }
 

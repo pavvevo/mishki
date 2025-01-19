@@ -6,6 +6,8 @@ import Entity.Enemy;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static java.lang.Math.max;
+
 public class Move extends Entity {
     Game game;
     Enemy owner;
@@ -37,6 +39,9 @@ public class Move extends Entity {
 
         int final_damage = owner.damage;
         final_damage -= game.getBuffAmmount(owner, "Intimidate");
+        final_damage += game.getBuffAmmount(owner, "Anger");
+
+        final_damage += max(0, final_damage);
 
         switch(name) {
             default: case "Attack":

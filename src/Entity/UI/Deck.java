@@ -38,7 +38,10 @@ public class Deck {
             "New Stick",
             "Sneak Strike",
             "Dull Claw",
-            "Magic Mush"
+            "Magic Mush",
+            "Rest",
+            "Rusty Nail",
+
     };
 
     Game game;

@@ -25,6 +25,8 @@ public class Coin extends Entity {
     BufferedImage heads_icon;
     BufferedImage tails_icon;
 
+    BufferedImage toss_icon;
+
     Random rand;
     Game game;
 
@@ -45,6 +47,7 @@ public class Coin extends Entity {
 
         heads_icon = getImg("/Resources/UI/Cards/notches_heads.png");
         tails_icon = getImg("/Resources/UI/Cards/notches_tails.png");
+        toss_icon = getImg("/Resources/UI/Cards/toss_icon.png");
     }
 
     public void spin_coin(int spin) {
@@ -98,7 +101,7 @@ public class Coin extends Entity {
             target_yscale = 1.25;
             if(spin <= 0) {
                 if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
-                    if(game.tosses > 0 && game.turn) {
+                    if(game.tosses > 0 && game.turn && offset_y >= 0) {
                         spin_coin(60);
                     } else if(game.tosses == 0){
                         xscale = 1.75;
@@ -181,6 +184,11 @@ public class Coin extends Entity {
 
         for(int i = 0; i < game.tails_mana; i++) {
             g2d.drawImage(tails_icon, (int)(10 * scale + scale * i * (tails_icon.getWidth() + 2)), 12 * scale + tails_icon.getHeight() * scale, tails_icon.getWidth() * scale, tails_icon.getHeight() * scale, null);
+        }
+
+        for(int i = 0; i < game.tosses; i++) {
+            int icon_width = 8 * scale;
+            g2d.drawImage(toss_icon, 160 * scale + icon_width * i - game.tosses * icon_width / 2, 8 * scale, icon_width, icon_width, null);
         }
     }
 }
