@@ -63,7 +63,9 @@ public class Deck {
         cards = new ArrayList<Card>();
         for(int i = 0; i < size; i++) {
             String name = "";
-            name = card_names[rand.nextInt(card_names.length)];
+            if(i == 0) name = "Rock Throw";
+            if(i == 1) name = "Tail Defence";
+            if(i == 2) name = card_names[rand.nextInt(card_names.length)];
             Card new_card = new Card(game, name);
             new_card.x = 116 + 42 * i;
             new_card.y = 300 + 100 * i;
