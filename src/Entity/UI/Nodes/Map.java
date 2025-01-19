@@ -24,13 +24,14 @@ public class Map {
         nodeX = 220/m[9].length/3 * game.scale;
         nodeY = 180/m.length/9 * game.scale;
         m[9][2] = new Boss(game, "Boss");
+
         createNodes(m);
         for(int i = m.length-1; i >= 0; i--) {
             for(int j = 0; j < m[i].length; j++) {
                 System.out.print(m[i][j]);
                 if(m[i][j] != null) {
                     m[i][j].x += (j*nodeX + 50 * game.scale) - 80;
-                    m[i][j].y += (i*nodeY * game.scale) * -1 + 170;
+                    m[i][j].y += (i*nodeY * game.scale) * -1 + 172;
                 }
 
             }
@@ -38,7 +39,6 @@ public class Map {
         }
         pathsUp(m);
         pathsDown(m);
-
     }
 
     public void createNodes(Node[][] m) {
@@ -302,10 +302,12 @@ public Node ifDoNode() {
         switch(node.name) {
             case "Battle":
                 game.startBattle();
-                game.State = Game.STATE.GAME;
                 game.deck.at_shop = false;
                 break;
             case "Boss":
+                game.startBattleBoss();
+                game.State = Game.STATE.GAME;
+                game.deck.at_shop = false;
                 break;
             case "Shop":
                 game.State = Game.STATE.SHOP;

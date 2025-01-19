@@ -73,7 +73,7 @@ public class Game extends JPanel implements Runnable {
 
     String[] enemy_names = {
             "Mouse",
-            "Fly"
+            "Fly",
     };
 
     //card vars
@@ -181,6 +181,21 @@ public class Game extends JPanel implements Runnable {
 
     public void startBattle() {
         enemy.setup(240, 50, enemy_names[rand.nextInt(enemy_names.length)]);
+
+        for(int i = 0; i < player.buffs.size(); i++) {
+            player.buffs.remove(i);
+            i -= 1;
+        }
+
+        tosses = max_tosses;
+
+        heads_mana = 0;
+        tails_mana = 0;
+
+        State = STATE.GAME;
+    }
+    public void startBattleBoss() {
+        enemy.setup(240, 50, "Boss");
 
         for(int i = 0; i < player.buffs.size(); i++) {
             player.buffs.remove(i);

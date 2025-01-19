@@ -92,18 +92,33 @@ public class Enemy extends Entity{
                 max_health = 50;
                 block_power = 10;
                 block = 25;
-                damage = 20;
+                damage = 15;
 
                 game.addBuff(this, "Guard", 5);
                 Move attack_bear = new Move(game, this, player,"Attack");
                 moves.add(attack_bear);
-                game.addBuff(this, "Poison", 2);
+                //game.addBuff(player, "Poison", 2);
                 Move block_bear = new Move(game, this, this,"Block");
 
                 moves.add(block_bear);
                 moves.add(block_bear);
                 moves.add(block_bear);
 
+                move_count = moves.size();
+            case "Snake":
+                setSprite(getImg("/Resources/Enemy/snake.png"));
+                max_health = 15;
+                block_power = 10;
+                block = 10;
+                damage = 5;
+
+                game.addBuff(this, "Guard", 5);
+                Move attack_snake = new Move(game, this, player,"Attack");
+                moves.add(attack_snake);
+                game.addBuff(player, "Poison", 8);
+                Move block_snake = new Move(game, this, this,"Block");
+                moves.add(block_snake);
+                game.removeBuff(player, "Posion", 1);
                 move_count = moves.size();
             case "Tish":
                 //
