@@ -19,6 +19,8 @@ import Entity.UI.Nodes.Map;
 import Entity.UI.Other.Chest_State;
 import Entity.UI.Other.ShopCards;
 
+import static java.lang.Math.clamp;
+
 public class Game extends JPanel implements Runnable {
     public final int scale = 3;
     public final int screen_width = 320 * scale;
@@ -32,6 +34,10 @@ public class Game extends JPanel implements Runnable {
         CHEST
     }
     public STATE State = STATE.MENU;
+    public STATE to_State = STATE.MENU;
+
+    public boolean in_transition = false;
+    public int transition_y = -screen_height * 4;
 
     final int FPS = 60;
 
@@ -49,6 +55,7 @@ public class Game extends JPanel implements Runnable {
     BufferedImage map_bg;
     BufferedImage chest_bg;
     BufferedImage shop_bg;
+    BufferedImage fade;
 
     public Card selected_card;
 
@@ -79,6 +86,14 @@ public class Game extends JPanel implements Runnable {
     //card vars
     public int heads_up_buff = 0;
 
+    public void changeState(STATE to) {
+
+        if(in_transition) return;
+        to_State = to;
+        transition_y = -fade.getHeight();
+        in_transition = true;
+    }
+
     public Game() {
         this.setPreferredSize(new Dimension(screen_width, screen_height));
         this.setBackground(Color.GRAY);
@@ -97,6 +112,7 @@ public class Game extends JPanel implements Runnable {
             logo = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/logo.png"));
             chest_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/chest_bg.png"));
             shop_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/shop_bg.png"));
+            fade = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/fade.png"));
         } catch (IOException e) {
             System.out.println("CANT LOAD CERTAIN IMAGE");
         }
@@ -310,6 +326,20 @@ public class Game extends JPanel implements Runnable {
             }
 
             input.update();
+
+            if(in_transition) {
+                transition_y += 10;
+                if(transition_y >= -fade.getHeight() / 2 && State != to_State) {
+                    State = to_State;
+                    if(State == STATE.GAME) {
+                        startBattle();
+                    }
+                }
+                if(transition_y >= screen_height) {
+                    in_transition = false;
+                }
+            }
+
         }
     }
 
@@ -351,6 +381,8 @@ public class Game extends JPanel implements Runnable {
                     chest.draw(g2d);
             }
             cursor.draw(g2d);
+
+            g2d.drawImage(fade, 0, transition_y * scale, fade.getWidth() * scale, fade.getHeight() * scale, null);
         }
         g2d.dispose();
 

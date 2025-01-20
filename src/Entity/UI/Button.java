@@ -50,12 +50,16 @@ public class Button extends Entity {
             target_yscale = 1.25;
 
             if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
+
+                xscale = 1.1;
+                yscale = 1.1;
+
                 switch(name) {
                     default: case "Menu Button":
-                        game.State = game.State.MAP;
+                        game.changeState(game.State.MAP);
                         break;
                     case "Map":
-                        game.State = game.State.MAP;
+                        game.changeState(game.State.MAP);
                         break;
                 }
             }
