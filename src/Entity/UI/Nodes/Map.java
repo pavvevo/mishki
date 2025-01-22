@@ -1,6 +1,5 @@
 package Entity.UI.Nodes;
 
-import Entity.UI.Card;
 import Main.Game;
 
 import java.util.ArrayList;
@@ -302,13 +301,13 @@ public Node ifDoNode() {
         switch(node.name) {
             case "Battle":
                 game.changeState(Game.STATE.GAME);
-                game.deck.at_shop = false;
+                //game.deck.at_shop = false;
                 break;
             case "Boss":
                 break;
             case "Shop":
                 game.changeState(Game.STATE.SHOP);
-                game.deck.at_shop = true;
+                //game.deck.at_shop = true;
                 break;
             case "Chest":
                 game.changeState(Game.STATE.CHEST);

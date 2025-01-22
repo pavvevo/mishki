@@ -2,131 +2,66 @@ package Entity.UI;
 
 import Entity.Entity;
 import Main.Game;
-import Entity.Player;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
-public class Deck {
-    List<Card> cards;
-    public int size;
+public class Deck extends Entity {
 
-    public boolean has_selected;
-    public boolean has_hovered;
-    Card selectedCard;
-    BufferedImage indicator;
-    public double indicator_x;
-    public double lerp_x;
-
+    Game game;
     Random rand;
 
-    public boolean menu_open = false;
+    CardHolder card_holder;
 
-    public boolean at_shop = true;
-
-    public boolean inspect_enabled = false;
     String[] card_names = {
             "Rock Throw",
             "Tail Defence",
-            "Heads Up",
-            "Heads Down",
-            "Intimidate",
-            "New Stick",
-            "Sneak Strike",
-            "Dull Claw",
-            "Magic Mush",
-            "Rest",
-            "Rusty Nail",
-            "Trample",
-            "Hidden Penny",
-            "Coin Trick",
-            "Tail Whip",
-            "Infected"
-
     };
 
-    Game game;
-    Player player;
+    public int deck_size = 5;
 
-    public Deck(Game game, int size) {
-        this.size = size;
-        this.game = game;
-        player = game.player;
-
+    public Deck(Game game) {
         rand = new Random();
+        card_holder = new CardHolder(game);
+        card_holder.max_slots = deck_size;
+        card_holder.sprite_width = 200;
+        card_holder.x = 225;
+        card_holder.y = 145;
+        card_holder.name = "Deck";
 
-        cards = new ArrayList<Card>();
-        int rand_start_card = rand.nextInt(card_names.length-2)+ 2;
-        for(int i = 0; i < size; i++) {
-            String name = "";
-            if(i == 0) name = "Rock Throw";
-            if(i == 1) name = "Tail Defence";
-            if(i == 2) name = card_names[rand_start_card];
-            Card new_card = new Card(game, name);
-            new_card.x = 116 + 42 * i;
-            new_card.y = 300 + 100 * i;
-            new_card.lerp_y = 142;
-            new_card.sin_timer = i * 20;
+        for(int i = 0; i < deck_size; i++) {
+            Card new_card = new Card(game);
             new_card.my_deck = this;
-            cards.add(new_card);
+            new_card.double_x = 200 * i;
+            new_card.double_y = 200 + 200 * i;
+
+            new_card.getCard(getRandomCardName());
+            card_holder.addCard(new_card);
         }
-
-        try {
-            indicator = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/indicator.png"));
-        } catch (IOException e) {
-            System.out.println("CANT LOAD");
-        }
-    }
-
-    public void update() {
-        menu_open = false;
-        has_hovered = false;
-
-            for (int i = 0; i < size; i++) {
-                cards.get(i).update();
-            }
-
-            indicator_x = lerp(indicator_x, lerp_x, 0.1);
-
-//            if (game.input.isButtonDown(MouseEvent.BUTTON2)) {
-//                for (int i = 0; i < size; i++) {
-//                    String name = "";
-//                    name = card_names[rand.nextInt(card_names.length)];
-//                    cards.get(i).setCardType(name);
-//                }
-//            }
     }
 
     public String getRandomCardName() {
         return card_names[rand.nextInt(card_names.length)];
     }
 
-    public double lerp(double a, double b, double f) {
-        return (a * (1.0 - f)) + (b * f);
+    public void early_update() {
+        card_holder.getHovered();
     }
 
-    public void draw(Graphics2D g2d) {
-            for (int i = size - 1; i >= 0; i--) {
-                cards.get(i).draw(g2d);
-            }
+    public void update() {
+        card_holder.update();
+    }
 
-            if (has_selected) {
-                selectedCard.draw(g2d);
-            }
+    public void draw(Graphics2D g2d, Game game) {
+        card_holder.draw(g2d);
 
-            if (menu_open) {
-                if (has_hovered && !has_selected) {
-                    g2d.setColor(Color.WHITE);
-                    //trqnva da se polzva game.scale ama mi dava 093283409128039 errora tuiche 3
-                    // /\ az go opravih xd, prosto slojih game.scale i ne crashva
-                    g2d.drawImage(indicator, (int) indicator_x * game.scale - 24, 80 * game.scale, 24 * game.scale, 32 * game.scale, null);
-                }
-            }
+        if(game.hovered_card != null) {
+            game.hovered_card.draw(g2d);
+        }
+
+        if(game.dragged_card != null) {
+            game.dragged_card.draw(g2d);
+        }
     }
 }

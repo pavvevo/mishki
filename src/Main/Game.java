@@ -5,6 +5,7 @@ import Entity.Coin;
 import Entity.Enemy;
 import Entity.Player;
 import Entity.UI.*;
+import Entity.UI.Deck;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -34,7 +35,7 @@ public class Game extends JPanel implements Runnable {
         CHEST
     }
     public STATE State = STATE.MENU;
-    public STATE to_State = STATE.MENU;
+    public STATE to_State = State;
 
     public boolean in_transition = false;
     public int transition_y = -screen_height * 4;
@@ -52,16 +53,26 @@ public class Game extends JPanel implements Runnable {
 
     BufferedImage bg;
     BufferedImage logo;
-    BufferedImage map_bg;
     BufferedImage chest_bg;
     BufferedImage shop_bg;
     BufferedImage fade;
 
-    public Card selected_card;
+    BufferedImage map_bg;
+    BufferedImage map_bg_back;
+    BufferedImage map_bg_middle;
+    BufferedImage map_bg_front;
+
+    public OldCard selected_card;
 
     Cursor cursor;
     public Input input;
+
     public Deck deck;
+    public Card hovered_card;
+    public Card other_card;
+    public Card dragged_card;
+    public CardHolder hovered_holder;
+
     Coin coin;
     public Player player;
     public Enemy enemy;
@@ -108,11 +119,15 @@ public class Game extends JPanel implements Runnable {
     public void startGame() {
         try {
             bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/bg.png"));
-            map_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg.png"));
             logo = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/logo.png"));
             chest_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/chest_bg.png"));
             shop_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/shop_bg.png"));
             fade = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/fade.png"));
+
+            map_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg.png"));
+            map_bg_back = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg_back.png"));
+            map_bg_middle = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg_middle.png"));
+            map_bg_front = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg_front.png"));
         } catch (IOException e) {
             System.out.println("CANT LOAD CERTAIN IMAGE");
         }
@@ -127,7 +142,7 @@ public class Game extends JPanel implements Runnable {
         player = new Player(this);
         enemy = new Enemy(this, player);
         coin = new Coin(this);
-        deck = new Deck(this,5);
+        deck = new Deck(this);
         cursor.setup(100, 100);
         enemy.setup(240, 50, enemy_names[rand.nextInt(enemy_names.length)]);
         player.setup(40, 100);
@@ -297,13 +312,17 @@ public class Game extends JPanel implements Runnable {
     public void update() {
         if(has_started) {
             selected_target = null;
-            cursor.update();
+            hovered_card = null;
+            other_card = null;
+            hovered_holder = null;
 
+            cursor.update();
             switch(State) {
                 case GAME:
-                    player.update();
-                    enemy.update();
-                    coin.update();
+                    //player.update();
+                    //enemy.update();
+                    //coin.update();
+                    deck.early_update();
                     deck.update();
                 break;
 
@@ -343,6 +362,16 @@ public class Game extends JPanel implements Runnable {
         }
     }
 
+    public void drawBackground(Graphics2D g2d) {
+        int bg_width = (int)(map_bg.getWidth() * scale * 1.1);
+        int bg_height = (int)(map_bg.getHeight() * scale * 1.1);
+        int bg_move = 20;
+        g2d.drawImage(map_bg, input.mouse_x / bg_move - screen_width / bg_move / 2, input.mouse_y / bg_move - screen_height / bg_move / 2, bg_width, bg_height, null);
+        g2d.drawImage(map_bg_back, input.mouse_x / (bg_move - 5) - screen_width / (bg_move - 5) / 2, input.mouse_y / (bg_move - 5) - screen_height / (bg_move - 5) / 2, bg_width, bg_height, null);
+        g2d.drawImage(map_bg_middle, input.mouse_x / (bg_move - 10) - screen_width / (bg_move - 10) / 2, input.mouse_y / (bg_move - 10) - screen_height / (bg_move - 10) / 2, bg_width, bg_height, null);
+        g2d.drawImage(map_bg_front, input.mouse_x / (bg_move - 15) - screen_width / (bg_move - 15) / 2, input.mouse_y / (bg_move - 15) - screen_height / (bg_move - 15) / 2, bg_width, bg_height, null);
+    }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
@@ -355,34 +384,33 @@ public class Game extends JPanel implements Runnable {
             switch(State) {
                 case GAME:
                     g2d.drawImage(bg, 0, 0, bg.getWidth() * scale, bg.getHeight() * scale, null);
-                    player.draw(g2d);
-                    enemy.draw(g2d);
-                    coin.draw(g2d);
-                    deck.draw(g2d);
+                    //player.draw(g2d);
+                    //enemy.draw(g2d);
+                    //coin.draw(g2d);
+                    deck.draw(g2d, this);
                     break;
 
                 case MENU:
-                    g2d.drawImage(map_bg, 0, 0, map_bg.getWidth() * scale, map_bg.getHeight() * scale, null);
-                    g2d.drawImage(logo, 160 * scale - logo.getWidth() * scale / 2, 10 * scale, logo.getWidth() * scale, logo.getHeight() * scale, null);
+                    drawBackground(g2d);
                     buttonMenu.draw(g2d);
                     break;
                 case MAP:
-                    g2d.drawImage(map_bg, 0, 0, map_bg.getWidth() * scale, map_bg.getHeight() * scale, null);
+                    drawBackground(g2d);
                     map.draw(g2d);
                     break;
                 case SHOP:
                     g2d.drawImage(shop_bg, 0, 0, shop_bg.getWidth() * scale, shop_bg.getHeight() * scale, null);
                     shop.draw(g2d);
-                    deck.draw(g2d);
+                    deck.draw(g2d, this);
                     buttonMap.draw(g2d);
                     break;
                 case CHEST:
                     g2d.drawImage(chest_bg, 0, 0, chest_bg.getWidth() * scale, chest_bg.getHeight() * scale, null);
                     chest.draw(g2d);
             }
+            g2d.drawImage(fade, 0, transition_y * scale, fade.getWidth() * scale, fade.getHeight() * scale, null);
             cursor.draw(g2d);
 
-            g2d.drawImage(fade, 0, transition_y * scale, fade.getWidth() * scale, fade.getHeight() * scale, null);
         }
         g2d.dispose();
 

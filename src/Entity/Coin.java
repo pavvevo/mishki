@@ -45,9 +45,9 @@ public class Coin extends Entity {
         shadow = getImg("/Resources/Other/shadow.png");
         rand = new Random();
 
-        heads_icon = getImg("/Resources/UI/Cards/notches_heads.png");
-        tails_icon = getImg("/Resources/UI/Cards/notches_tails.png");
-        toss_icon = getImg("/Resources/UI/Cards/toss_icon.png");
+        heads_icon = getImg("/Resources/UI/Cards/Other/notches_heads.png");
+        tails_icon = getImg("/Resources/UI/Cards/Other/notches_tails.png");
+        toss_icon = getImg("/Resources/UI/Cards/Other/toss_icon.png");
     }
 
     public void spin_coin(int spin) {

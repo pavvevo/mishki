@@ -13,6 +13,7 @@ import java.util.Random;
 
 public class Entity {
     public int x, y;
+    public double double_x, double_y;
     public int max_health;
     public int health;
     public int block = 0;
@@ -60,8 +61,8 @@ public class Entity {
     public boolean isHovered(Input input) {
         if(input == null) return false;
 
-        boolean hovered = input.mouse_x > x - sprite_width / 2 && input.mouse_x < x + sprite_width / 2
-                && input.mouse_y > y - sprite_height / 2 && input.mouse_y < y + sprite_height / 2;
+        boolean hovered = input.mouse_x > x - sprite_width / 2 && input.mouse_x < x + sprite_width / 2 &&
+                input.mouse_y > y - sprite_height / 2 && input.mouse_y < y + sprite_height / 2;
 
         return hovered;
     }
