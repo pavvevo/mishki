@@ -88,23 +88,6 @@ public class Enemy extends Entity{
 
                 move_count = moves.size();
                 break;
-            case "Fly":
-                setSprite(getImg("/Resources/Enemy/fly.png"));
-                max_health = 10;
-                block_power = 5;
-                block = 25;
-                damage = 10;
-
-                game.addBuff(this, "Guard", 5);
-
-                Move move_fly = new Move(game, this, player,"Attack");
-                moves.add(move_fly);
-                Move move_block = new Move(game, this, this,"Block");
-                moves.add(move_block);
-                moves.add(move_block);
-                moves.add(move_block);
-
-                move_count = moves.size();
             case "Tish":
                 //
                 break;
