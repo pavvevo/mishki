@@ -1,10 +1,11 @@
 package Main;
 
 import Entity.Entity;
-import Entity.Coin;
-import Entity.Enemy;
-import Entity.Player;
+import Entity.UI.Battle.Coin;
+import Entity.UI.Battle.Enemy;
+import Entity.UI.Battle.Player;
 import Entity.UI.*;
+import Entity.General.*;
 import Entity.UI.Deck;
 
 import javax.imageio.ImageIO;
@@ -12,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import Entity.UI.Button;
@@ -56,53 +59,52 @@ public class Game extends JPanel implements Runnable {
     BufferedImage chest_bg;
     BufferedImage shop_bg;
     BufferedImage fade;
-
     BufferedImage map_bg;
     BufferedImage map_bg_back;
     BufferedImage map_bg_middle;
     BufferedImage map_bg_front;
 
-    public OldCard selected_card;
-
     Cursor cursor;
     public Input input;
 
     public Deck deck;
+    public Entity hovered_entity;
     public Card hovered_card;
     public Card other_card;
     public Card dragged_card;
     public CardHolder hovered_holder;
 
+    public List<Particle> particles;
+
     Coin coin;
     public Player player;
-    public Enemy enemy;
+    public List<Enemy> enemies;
     Map map;
     Chest_State chest;
     public ShopCards shop;
 
-    public Entity selected_target;
-    public boolean is_target_player = false;
-
     public int tails_mana = 0;
     public int heads_mana = 0;
     public boolean turn = true;
-    public int max_tosses = 3;
-    public int tosses = max_tosses;
-
-    String[] enemy_names = {
-            "Mouse",
-            "Fly"
-    };
-
-    //card vars
-    public int heads_up_buff = 0;
 
     public void changeState(STATE to) {
-
         if(in_transition) return;
         to_State = to;
         transition_y = -fade.getHeight();
         in_transition = true;
+    }
+
+    public void startState(STATE state) {
+        switch(state) {
+            case GAME:
+                enemies = new ArrayList<Enemy>();
+                Enemy new_enemy = new Enemy(this, this.player);
+                new_enemy.setup("Mouse");
+                new_enemy.x = 230;
+                new_enemy.y = 70;
+                this.enemies.add(new_enemy);
+            break;
+        }
     }
 
     public Game() {
@@ -118,21 +120,21 @@ public class Game extends JPanel implements Runnable {
 
     public void startGame() {
         try {
-            bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/bg.png"));
+            bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/Backgrounds/bg.png"));
             logo = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/logo.png"));
-            chest_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/chest_bg.png"));
-            shop_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/shop_bg.png"));
+            chest_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/Backgrounds/chest_bg.png"));
+            shop_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/Backgrounds/shop_bg.png"));
             fade = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/fade.png"));
-
-            map_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg.png"));
-            map_bg_back = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg_back.png"));
-            map_bg_middle = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg_middle.png"));
-            map_bg_front = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/map_bg_front.png"));
+            map_bg = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/Backgrounds/map_bg.png"));
+            map_bg_back = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/Backgrounds/map_bg_back.png"));
+            map_bg_middle = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/Backgrounds/map_bg_middle.png"));
+            map_bg_front = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/Backgrounds/map_bg_front.png"));
         } catch (IOException e) {
             System.out.println("CANT LOAD CERTAIN IMAGE");
         }
 
         rand = new Random();
+        particles = new ArrayList<Particle>();
 
         buttonMenu = new Button(this, "Main Menu", 160, 140, 5, 2);
         input = new Input(this);
@@ -140,11 +142,12 @@ public class Game extends JPanel implements Runnable {
         chest = new Chest_State(this);
         cursor = new Cursor(this);
         player = new Player(this);
-        enemy = new Enemy(this, player);
+        enemies = new ArrayList<Enemy>();
         coin = new Coin(this);
         deck = new Deck(this);
+
+
         cursor.setup(100, 100);
-        enemy.setup(240, 50, enemy_names[rand.nextInt(enemy_names.length)]);
         player.setup(40, 100);
         coin.setup(160, 75);
         map.setup();
@@ -156,21 +159,6 @@ public class Game extends JPanel implements Runnable {
 
         gameThread = new Thread(this);
         gameThread.start();
-    }
-
-    public void resetGame() {
-        State = STATE.MENU;
-        cursor.setup(100, 100);
-        enemy.setup(240, 50, enemy_names[rand.nextInt(enemy_names.length)]);
-        player.setup(40, 100);
-        coin.setup(160, 75);
-        map.setup();
-
-    }
-
-    public void setSelectedTarget(Entity target, boolean is_player) {
-        this.selected_target = target;
-        this.is_target_player = is_player;
     }
 
     public void addBuff(Entity target, String name, int ammount) {
@@ -187,7 +175,6 @@ public class Game extends JPanel implements Runnable {
             target.buffs.add(new_buff);
         }
     }
-
     public int getBuffAmmount(Entity target, String name) {
         for(int i = 0; i < target.buffs.size(); i++) {
             if(target.buffs.get(i).name.equals(name)) {
@@ -197,7 +184,6 @@ public class Game extends JPanel implements Runnable {
 
         return 0;
     }
-
     public void removeBuff(Entity target, String name, int ammount) {
         for(int i = 0; i < target.buffs.size(); i++) {
             if(target.buffs.get(i).name.equals(name)) {
@@ -210,77 +196,12 @@ public class Game extends JPanel implements Runnable {
         }
     }
 
-    public void startBattle() {
-        enemy.setup(240, 50, enemy_names[rand.nextInt(enemy_names.length)]);
-
-        for(int i = 0; i < player.buffs.size(); i++) {
-            player.buffs.remove(i);
-            i -= 1;
-        }
-
-        tosses = max_tosses;
-
-        heads_mana = 0;
-        tails_mana = 0;
-
-        State = STATE.GAME;
-    }
-
     public void changeTurn(boolean to) {
         turn = to;
-
-        //to player
-        if(turn) {
-            coin.gravity = 0.2;
-            coin.yscale = 5;
-            coin.xscale = 0.2;
-            coin.vsp = 10;
-            player.block = 0;
-            tosses = max_tosses;
-
-            removeBuff(enemy, "Intimidate", 1);
-            removeBuff(player, "New Stick", 1);
-            removeBuff(player, "Anger", 1);
-
-            if(getBuffAmmount(player, "Poison") > 0) {
-                player.health -= 2;
-                player.shake = 5;
-                removeBuff(player, "Poison", 1);
-            }
-
-            if(getBuffAmmount(enemy, "Poison") > 0) {
-                enemy.health -= 2;
-                player.shake = 5;
-                removeBuff(enemy, "Poison", 1);
-            }
-
-            if(getBuffAmmount(enemy, "Guard") > 0) {
-                enemy.xscale = 0.75;
-                enemy.yscale = 1.25;
-                enemy.block += 5;
-            }
-        }
-
-        //to enemy
-        if(!turn) {
-            heads_mana = 0;
-            tails_mana = 0;
-            enemy.block = 0;
-
-            removeBuff(enemy, "Anger", 1);
-            removeBuff(player, "Guard", 1);
-
-            if(getBuffAmmount(player, "Guard") > 0) {
-                player.xscale = 0.75;
-                player.yscale = 1.25;
-                player.block += 5;
-            }
-        }
     }
 
     @Override
     public void run() {
-
         double draw_interval = 1000000000/FPS;
         double delta = 0;
         long last_time = System.nanoTime();
@@ -311,17 +232,22 @@ public class Game extends JPanel implements Runnable {
 
     public void update() {
         if(has_started) {
-            selected_target = null;
             hovered_card = null;
             other_card = null;
             hovered_holder = null;
+            hovered_entity = null;
 
             cursor.update();
+
             switch(State) {
                 case GAME:
                     //player.update();
-                    //enemy.update();
                     //coin.update();
+
+                    for(Enemy enemy : enemies) {
+                        enemy.update();
+                    }
+
                     deck.early_update();
                     deck.update();
                 break;
@@ -341,7 +267,14 @@ public class Game extends JPanel implements Runnable {
                     deck.update();
                     shop.update();
                     buttonMap.update();
+                    break;
+            }
 
+            for(int i = particles.size() - 1; i >= 0; i--) {
+                particles.get(i).update();
+                if(particles.get(i).finished) {
+                    particles.remove(i);
+                }
             }
 
             input.update();
@@ -349,10 +282,8 @@ public class Game extends JPanel implements Runnable {
             if(in_transition) {
                 transition_y += 10;
                 if(transition_y >= -fade.getHeight() / 2 && State != to_State) {
+                    startState(to_State);
                     State = to_State;
-                    if(State == STATE.GAME) {
-                        startBattle();
-                    }
                 }
                 if(transition_y >= screen_height) {
                     in_transition = false;
@@ -385,8 +316,12 @@ public class Game extends JPanel implements Runnable {
                 case GAME:
                     g2d.drawImage(bg, 0, 0, bg.getWidth() * scale, bg.getHeight() * scale, null);
                     //player.draw(g2d);
-                    //enemy.draw(g2d);
                     //coin.draw(g2d);
+
+                    for(Enemy enemy : enemies) {
+                        enemy.draw(g2d);
+                    }
+
                     deck.draw(g2d, this);
                     break;
 
@@ -395,7 +330,7 @@ public class Game extends JPanel implements Runnable {
                     buttonMenu.draw(g2d);
                     break;
                 case MAP:
-                    drawBackground(g2d);
+
                     map.draw(g2d);
                     break;
                 case SHOP:
@@ -408,6 +343,11 @@ public class Game extends JPanel implements Runnable {
                     g2d.drawImage(chest_bg, 0, 0, chest_bg.getWidth() * scale, chest_bg.getHeight() * scale, null);
                     chest.draw(g2d);
             }
+
+            for(Particle p : particles) {
+                p.draw(g2d);
+            }
+
             g2d.drawImage(fade, 0, transition_y * scale, fade.getWidth() * scale, fade.getHeight() * scale, null);
             cursor.draw(g2d);
 

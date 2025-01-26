@@ -2,10 +2,17 @@ package Entity.UI.Nodes;
 
 import Main.Game;
 
+import javax.imageio.ImageIO;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.*;
 import java.util.Random;
+
+import static java.lang.Math.clamp;
+
 public class Map {
     List<Node> connectionlist;
     Node[][] m = new Node[10][5];
@@ -13,7 +20,12 @@ public class Map {
     int nodeX, nodeY;
     int playerclickbr = 0;
 
-    int scroll_y = 0;
+    public int scroll_y = 0;
+    double scroll_y_double = 0;
+    int scroll_lerp_y = 0;
+    int scroll_anchor = 0;
+    boolean what_fix = false;
+    BufferedImage map_image;
 
     public Map(Game game) {
         this.game = game;
@@ -26,18 +38,21 @@ public class Map {
         createNodes(m);
         for(int i = m.length-1; i >= 0; i--) {
             for(int j = 0; j < m[i].length; j++) {
-                System.out.print(m[i][j]);
                 if(m[i][j] != null) {
                     m[i][j].x += (j*nodeX + 50 * game.scale) - 80;
                     m[i][j].y += (i*nodeY * game.scale) * -1 + 170;
                 }
 
             }
-            System.out.println("///");
         }
         pathsUp(m);
         pathsDown(m);
 
+        try {
+            map_image = ImageIO.read(getClass().getResourceAsStream("/Resources/Other/Backgrounds/map.png"));
+        } catch (IOException e) {
+            System.out.println("CANT LOAD MAP IMAGE");
+        }
     }
 
     public void createNodes(Node[][] m) {
@@ -252,6 +267,9 @@ public Node ifDoNode() {
     }
 
     public void draw(Graphics2D g2d) {
+
+        g2d.drawImage(map_image, 0, scroll_y * game.scale, map_image.getWidth() * game.scale, map_image.getHeight() * game.scale, null);
+
         for(int i = 0; i < m.length; i++) {
             for(int j = 0; j < m[i].length; j++) {
                 if(m[i][j] != null) {
@@ -269,28 +287,46 @@ public Node ifDoNode() {
         }
 
     }
-    public void update() {
-        if(playerclickbr == 0) {
-            for (int j = 0; j < m[9].length; j++) {
-                if (m[0][j] != null) {
-                    m[0][j].update();
-                    m[0][j].isAvailable = true;
-                    if(m[0][j].isClicked()) {
-                        playerClick(m[0][j]);
-                    }
-                }
-            }
-        }
-        else {
-            for(int i = 0; i < connectionlist.size(); i++) {
-                connectionlist.get(i).update();
-                connectionlist.get(i).isAvailable = true;
-                if(connectionlist.get(i).isClicked()) {
 
-                    playerClick(connectionlist.get(i));
-                }
-            }
+    public double lerp(double a, double b, double f) {
+        return (a * (1.0 - f)) + (b * f);
+    }
+
+    public void update() {
+
+        if(game.input.isButtonDown(MouseEvent.BUTTON1)) {
+            scroll_anchor = game.input.mouse_y - scroll_y;
         }
+        if(game.input.isButton(MouseEvent.BUTTON1)) {
+            scroll_lerp_y = game.input.mouse_y - scroll_anchor;
+        }
+
+        scroll_lerp_y = clamp(scroll_lerp_y ,-map_image.getHeight() / 2 - 20, 20);
+
+        scroll_y_double = lerp(scroll_y_double, scroll_lerp_y, 0.1);
+        scroll_y = (int)scroll_y_double;
+
+//        if(playerclickbr == 0) {
+//            for (int j = 0; j < m[9].length; j++) {
+//                if (m[0][j] != null) {
+//                    m[0][j].update();
+//                    m[0][j].isAvailable = true;
+//                    if(m[0][j].isClicked()) {
+//                        playerClick(m[0][j]);
+//                    }
+//                }
+//            }
+//        }
+//        else {
+//            for(int i = 0; i < connectionlist.size(); i++) {
+//                connectionlist.get(i).update();
+//                connectionlist.get(i).isAvailable = true;
+//                if(connectionlist.get(i).isClicked()) {
+//
+//                    playerClick(connectionlist.get(i));
+//                }
+//            }
+//        }
     }
     public void playerClick(Node node) {
         playerclickbr++;
@@ -299,6 +335,9 @@ public Node ifDoNode() {
         node.yscale = 1;
         connectionlist = node.getConnections();
         switch(node.name) {
+            default:
+
+                break;
             case "Battle":
                 game.changeState(Game.STATE.GAME);
                 //game.deck.at_shop = false;

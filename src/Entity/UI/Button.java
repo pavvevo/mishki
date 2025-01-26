@@ -1,7 +1,6 @@
 package Entity.UI;
 
 import Entity.Entity;
-import Entity.Enemy;
 import Main.Game;
 
 import java.awt.*;
@@ -56,7 +55,7 @@ public class Button extends Entity {
 
                 switch(name) {
                     default: case "Menu Button":
-                        game.changeState(game.State.MAP);
+                        game.changeState(game.State.GAME);
                         break;
                     case "Map":
                         game.changeState(game.State.MAP);
