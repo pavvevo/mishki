@@ -97,7 +97,7 @@ public class Card extends Entity {
 
             offset_y = -15;
 
-            if(game.input.isButton(MouseEvent.BUTTON1) && game.dragged_card == null) {
+            if(game.input.isButtonDown(MouseEvent.BUTTON1) && game.dragged_card == null) {
                 game.dragged_card = this;
                 is_dragged = true;
             }
@@ -117,10 +117,26 @@ public class Card extends Entity {
 
             target_xscale = 1.25;
             target_yscale = 1.25;
+
+            if(game.hovered_entity != null) {
+                target_xscale = 0.75;
+                target_yscale = 0.75;
+            }
         }
+
     }
 
     public boolean late_update() {
+
+        if(game.input.isButtonDown(MouseEvent.BUTTON3)) {
+            if(is_dragged) {
+                game.dragged_card = null;
+                is_dragged = false;
+
+                yscale = 1.5;
+                xscale = 1.0;
+            }
+        }
 
         if(game.input.isButtonUp(MouseEvent.BUTTON1)) {
             if(is_dragged) {
@@ -134,7 +150,6 @@ public class Card extends Entity {
 
             game.dragged_card = null;
             is_dragged = false;
-
         }
 
         return false;

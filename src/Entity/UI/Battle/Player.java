@@ -1,5 +1,6 @@
-package Entity;
+package Entity.UI.Battle;
 
+import Entity.Entity;
 import Entity.UI.Buff;
 import Main.Game;
 import java.awt.*;
@@ -47,14 +48,6 @@ public class Player extends Entity {
 
         if(shake > 0) shake -= 0.5;
         else shake = 0;
-
-        if(health <= 0) {
-            game.resetGame();
-        }
-
-        if(isHovered(game.input)) {
-            game.setSelectedTarget(this, true);
-        }
 
         if(game.turn) {
             if(sprite == back_fox) {

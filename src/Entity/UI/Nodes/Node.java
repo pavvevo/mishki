@@ -40,8 +40,6 @@ public class Node extends Entity {
     }
 
 
-
-
     public void draw(Graphics2D g2d) {
         g2d.setColor(Color.ORANGE);
         g2d.setStroke(new BasicStroke(20));

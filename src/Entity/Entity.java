@@ -43,7 +43,7 @@ public class Entity {
         try {
             return ImageIO.read(getClass().getResourceAsStream(path));
         } catch (IOException e) {
-            System.out.println("CANT LOAD");
+            System.out.println("CANT LOAD: " + path);
             return null;
         }
     }
