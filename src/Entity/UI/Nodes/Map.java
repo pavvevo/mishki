@@ -33,14 +33,14 @@ public class Map {
     public void setup() {
         connectionlist = new ArrayList<Node>();
         nodeX = 220/m[9].length/3 * game.scale;
-        nodeY = 180/m.length/9 * game.scale;
+        nodeY = 180/m.length/6 * game.scale;
         m[9][2] = new Boss(game, "Boss");
         createNodes(m);
         for(int i = m.length-1; i >= 0; i--) {
             for(int j = 0; j < m[i].length; j++) {
                 if(m[i][j] != null) {
                     m[i][j].x += (j*nodeX + 50 * game.scale) - 80;
-                    m[i][j].y += (i*nodeY * game.scale) * -1 + 170;
+                    m[i][j].y += (i*nodeY * game.scale) * -1 + 300;
                 }
 
             }
@@ -273,7 +273,7 @@ public Node ifDoNode() {
         for(int i = 0; i < m.length; i++) {
             for(int j = 0; j < m[i].length; j++) {
                 if(m[i][j] != null) {
-                    m[i][j].draw(g2d);
+                    m[i][j].draw(g2d, scroll_y);
                 }
 
             }
@@ -281,7 +281,7 @@ public Node ifDoNode() {
         for(int i = 0; i < m.length; i++) {
             for (int j = 0; j < m[i].length; j++) {
                 if(m[i][j] != null) {
-                    m[i][j].draw2(g2d);
+                    m[i][j].draw2(g2d, scroll_y);
                 }
             }
         }

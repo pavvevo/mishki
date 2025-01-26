@@ -40,19 +40,19 @@ public class Node extends Entity {
     }
 
 
-    public void draw(Graphics2D g2d) {
+    public void draw(Graphics2D g2d, int scroll_y) {
         g2d.setColor(Color.ORANGE);
         g2d.setStroke(new BasicStroke(20));
         for(int i = 0; i < connections.size(); i++) {
-            g2d.drawLine(this.x*scale, this.y*scale, connections.get(i).x*scale, connections.get(i).y*scale);
+            g2d.drawLine(this.x*scale, this.y*scale + scroll_y * scale, connections.get(i).x*scale, connections.get(i).y*scale + scroll_y * scale);
         }
         g2d.setColor(Color.WHITE);
         width = (int)(xscale * sprite_width * scale);
         height = (int)(yscale * sprite_height * scale);
 
     }
-    public void draw2(Graphics g2d) {
-        g2d.drawImage(sprite, x * scale - width / 2, y * scale - height / 2, width, height, null);
+    public void draw2(Graphics g2d, int scroll_y) {
+        g2d.drawImage(sprite, x * scale - width / 2, y * scale - height / 2 + scroll_y * scale, width, height, null);
     }
     public void update() {
         sin_timer += 1;

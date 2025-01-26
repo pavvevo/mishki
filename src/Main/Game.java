@@ -37,7 +37,7 @@ public class Game extends JPanel implements Runnable {
         SHOP,
         CHEST
     }
-    public STATE State = STATE.MENU;
+    public STATE State = STATE.GAME;
     public STATE to_State = State;
 
     public boolean in_transition = false;
