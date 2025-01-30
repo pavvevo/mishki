@@ -1,8 +1,7 @@
 package Entity.UI.Other;
 
 import Entity.Entity;
-import Entity.UI.Card;
-import Entity.UI.Deck;
+import Entity.Battle.Deck;
 import Main.Game;
 
 import java.awt.*;

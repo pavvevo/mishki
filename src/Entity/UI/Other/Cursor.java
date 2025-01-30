@@ -1,4 +1,4 @@
-package Entity.UI;
+package Entity.UI.Other;
 
 import Main.Game;
 import java.awt.*;

@@ -1,17 +1,14 @@
-package Entity.UI.Battle;
+package Entity.Battle;
 
 import Entity.Entity;
 import Entity.General.Particle;
-import Entity.General.Tween;
 import Main.Game;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 import static java.lang.Math.*;
 
@@ -23,8 +20,6 @@ public class Enemy extends Entity {
     BufferedImage shadow;
     int shadow_offset_x;
     int shadow_offset_y;
-
-    List<Tween> tweens;
 
     BufferedImage healtbar;
 
@@ -62,15 +57,6 @@ public class Enemy extends Entity {
         }
     }
 
-    public boolean isTweenActive(String name) {
-        for(Tween t : tweens) {
-            if(t.name.equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void update() {
         sin_timer += 1;
         lil_sin = sin(sin_timer / 10) / 20;
@@ -80,14 +66,7 @@ public class Enemy extends Entity {
         if(shake > 0) shake -= 0.25;
         else shake = 0;
 
-        for (int i = tweens.size() - 1; i >= 0; i--) {
-            Tween tween = tweens.get(i);
-            if (tween.is_finished) {
-                tweens.remove(i);
-            } else {
-                tween.update();
-            }
-        }
+        updateTweens();
 
         sprite_height /= 2;
         if(isHovered(game.input)) {
@@ -121,6 +100,8 @@ public class Enemy extends Entity {
             test_particle.speed = 7;
             test_particle.friction = 0.9;
             test_particle.sprite = test_particle.getImg("/Resources/Other/Particles/particle_spark.png");
+            test_particle.end_fade = false;
+            test_particle.end_shrink = true;
             game.particles.add(test_particle);
         }
     }
@@ -145,7 +126,7 @@ public class Enemy extends Entity {
             g2d.fillRect(hb_x + 4 * scale, hb_y + 2 * scale, hb_width - 7 * scale, hb_height - 5 * scale);
         Color red = new Color(190, 38, 51);
         g2d.setColor(red);
-        int health_percent = (int)((hb_width - 7 * scale) * (health / max_health));
+        int health_percent = (int)((hb_width - 7 * scale) * ((double)health / (double)max_health));
             g2d.fillRect(hb_x + 4 * scale, hb_y + 2 * scale, health_percent, hb_height - 5 * scale);
             g2d.drawImage(healtbar, hb_x, hb_y, hb_width, hb_height, null);
     }

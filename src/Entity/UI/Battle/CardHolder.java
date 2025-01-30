@@ -1,15 +1,12 @@
-package Entity.UI;
+package Entity.UI.Battle;
 
+import Entity.Battle.Card;
 import Entity.Entity;
 import Main.Game;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Collections;
-
-import static java.lang.Math.sin;
 
 public class CardHolder extends Entity {
 
@@ -97,8 +94,8 @@ public class CardHolder extends Entity {
     }
 
     public void draw(Graphics2D g2d) {
-        for(int i = cards.size() - 1; i >= 0; i--) {
-            cards.get(i).draw(g2d);
+        for(Card card : cards) {
+            card.draw(g2d);
         }
 
         //debug
