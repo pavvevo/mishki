@@ -1,6 +1,7 @@
 package Entity;
 
-import Entity.UI.Buff;
+import Entity.General.Tween;
+import Entity.UI.Battle.Buff;
 import Main.Game;
 import Main.Input;
 
@@ -9,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 public class Entity {
     public int x, y;
@@ -32,7 +32,8 @@ public class Entity {
     public int width;
     public int height;
     Game game;
-    public List<Buff> buffs;
+
+    public List<Tween> tweens;
 
     public int lerp_x;
     public int lerp_y;
@@ -52,6 +53,26 @@ public class Entity {
         this.sprite = img;
         sprite_width = sprite.getWidth();
         sprite_height = sprite.getHeight();
+    }
+
+    public boolean isTweenActive(String name) {
+        for(Tween t : tweens) {
+            if(t.name.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void updateTweens() {
+        for (int i = tweens.size() - 1; i >= 0; i--) {
+            Tween tween = tweens.get(i);
+            if (tween.is_finished) {
+                tweens.remove(i);
+            } else {
+                tween.update();
+            }
+        }
     }
 
     public double lerp(double a, double b, double f) {

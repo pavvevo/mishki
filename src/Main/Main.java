@@ -23,7 +23,5 @@ public class Main {
         window.setVisible(true);
 
         game.startGame();
-
-
     }
 }

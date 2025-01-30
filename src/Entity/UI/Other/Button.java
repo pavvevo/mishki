@@ -1,4 +1,4 @@
-package Entity.UI;
+package Entity.UI.Other;
 
 import Entity.Entity;
 import Main.Game;
@@ -21,6 +21,7 @@ public class Button extends Entity {
     public Button(Game game, String name, int x, int y, int w, int h) {
         this.name = name;
         this.game = game;
+        scale = game.scale;
         this.x = x;
         this.y = y;
         lerp_x = x;

@@ -1,32 +1,29 @@
 package Main;
 
+import Entity.Battle.*;
 import Entity.Entity;
-import Entity.UI.Battle.Coin;
-import Entity.UI.Battle.Enemy;
-import Entity.UI.Battle.Player;
-import Entity.UI.*;
+import Entity.UI.Battle.*;
 import Entity.General.*;
-import Entity.UI.Deck;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import Entity.UI.Button;
-import Entity.UI.Cursor;
+import Entity.UI.Other.*;
 import Entity.UI.Nodes.Map;
-import Entity.UI.Other.Chest_State;
-import Entity.UI.Other.ShopCards;
+import Entity.UI.Other.Button;
+import Entity.UI.Other.Cursor;
 
 import static java.lang.Math.clamp;
 
 public class Game extends JPanel implements Runnable {
-    public final int scale = 3;
+    public final int scale = 4;
     public final int screen_width = 320 * scale;
     public final int screen_height = 180 * scale;
 
@@ -37,7 +34,7 @@ public class Game extends JPanel implements Runnable {
         SHOP,
         CHEST
     }
-    public STATE State = STATE.GAME;
+    public STATE State = STATE.MENU;
     public STATE to_State = State;
 
     public boolean in_transition = false;
@@ -47,10 +44,11 @@ public class Game extends JPanel implements Runnable {
 
     Thread gameThread;
     boolean has_started = false;
-
     Random rand;
 
     //neshta
+    Font font;
+
     Button buttonMenu;
     Button buttonMap;
 
@@ -66,6 +64,7 @@ public class Game extends JPanel implements Runnable {
 
     Cursor cursor;
     public Input input;
+    public Helper helper;
 
     public Deck deck;
     public Entity hovered_entity;
@@ -75,6 +74,7 @@ public class Game extends JPanel implements Runnable {
     public CardHolder hovered_holder;
 
     public List<Particle> particles;
+    public List<Move> move_queue;
 
     Coin coin;
     public Player player;
@@ -100,7 +100,7 @@ public class Game extends JPanel implements Runnable {
                 enemies = new ArrayList<Enemy>();
                 Enemy new_enemy = new Enemy(this, this.player);
                 new_enemy.setup("Mouse");
-                new_enemy.x = 230;
+                new_enemy.x = 250;
                 new_enemy.y = 70;
                 this.enemies.add(new_enemy);
             break;
@@ -133,6 +133,16 @@ public class Game extends JPanel implements Runnable {
             System.out.println("CANT LOAD CERTAIN IMAGE");
         }
 
+        try {
+            InputStream is = getClass().getResourceAsStream("/Resources/Other/Minecraft.ttf");
+            font = Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch(FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+
+        helper = new Helper();
+        move_queue = new ArrayList<Move>();
+
         rand = new Random();
         particles = new ArrayList<Particle>();
 
@@ -148,7 +158,9 @@ public class Game extends JPanel implements Runnable {
 
 
         cursor.setup(100, 100);
-        player.setup(40, 100);
+        player.setup();
+        player.x = 50;
+        player.y = 125;
         coin.setup(160, 75);
         map.setup();
         chest.setup();
@@ -159,41 +171,6 @@ public class Game extends JPanel implements Runnable {
 
         gameThread = new Thread(this);
         gameThread.start();
-    }
-
-    public void addBuff(Entity target, String name, int ammount) {
-        boolean updated = false;
-        for(int i = 0; i < target.buffs.size(); i++) {
-            if(target.buffs.get(i).name.equals(name)) {
-                target.buffs.get(i).remaining += ammount;
-                updated = true;
-            }
-        }
-        if(!updated) {
-            Buff new_buff = new Buff(this, name);
-            new_buff.remaining = ammount;
-            target.buffs.add(new_buff);
-        }
-    }
-    public int getBuffAmmount(Entity target, String name) {
-        for(int i = 0; i < target.buffs.size(); i++) {
-            if(target.buffs.get(i).name.equals(name)) {
-                return target.buffs.get(i).remaining;
-            }
-        }
-
-        return 0;
-    }
-    public void removeBuff(Entity target, String name, int ammount) {
-        for(int i = 0; i < target.buffs.size(); i++) {
-            if(target.buffs.get(i).name.equals(name)) {
-                target.buffs.get(i).remaining -= ammount;
-                if(target.buffs.get(i).remaining <= 0) {
-                    target.buffs.remove(i);
-                    i -= 1;
-                }
-            }
-        }
     }
 
     public void changeTurn(boolean to) {
@@ -241,9 +218,14 @@ public class Game extends JPanel implements Runnable {
 
             switch(State) {
                 case GAME:
-                    //player.update();
                     //coin.update();
 
+                    if(!move_queue.isEmpty()) {
+                        move_queue.get(0).update();
+                        if(move_queue.get(0).finished) move_queue.remove(0);
+                    }
+
+                    player.update();
                     for(Enemy enemy : enemies) {
                         enemy.update();
                     }
@@ -294,8 +276,8 @@ public class Game extends JPanel implements Runnable {
     }
 
     public void drawBackground(Graphics2D g2d) {
-        int bg_width = (int)(map_bg.getWidth() * scale * 1.1);
-        int bg_height = (int)(map_bg.getHeight() * scale * 1.1);
+        int bg_width = (int)(map_bg.getWidth() * scale * 1.25);
+        int bg_height = (int)(map_bg.getHeight() * scale * 1.25);
         int bg_move = 20;
         g2d.drawImage(map_bg, input.mouse_x / bg_move - screen_width / bg_move / 2, input.mouse_y / bg_move - screen_height / bg_move / 2, bg_width, bg_height, null);
         g2d.drawImage(map_bg_back, input.mouse_x / (bg_move - 5) - screen_width / (bg_move - 5) / 2, input.mouse_y / (bg_move - 5) - screen_height / (bg_move - 5) / 2, bg_width, bg_height, null);
@@ -308,20 +290,19 @@ public class Game extends JPanel implements Runnable {
         Graphics2D g2d = (Graphics2D) g;
         if(has_started) {
 
-            Font currentFont = g2d.getFont();
-            Font newFont = currentFont.deriveFont(currentFont.getSize() * 0.5f * scale);
-            g2d.setFont(newFont);
+            g2d.setFont(font);
+            g2d.setFont(g2d.getFont().deriveFont(Font.PLAIN,  8 * scale));
 
             switch(State) {
                 case GAME:
                     g2d.drawImage(bg, 0, 0, bg.getWidth() * scale, bg.getHeight() * scale, null);
-                    //player.draw(g2d);
                     //coin.draw(g2d);
 
                     for(Enemy enemy : enemies) {
                         enemy.draw(g2d);
                     }
 
+                    player.draw(g2d);
                     deck.draw(g2d, this);
                     break;
 

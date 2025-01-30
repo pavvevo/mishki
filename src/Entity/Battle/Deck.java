@@ -1,10 +1,12 @@
-package Entity.UI;
+package Entity.Battle;
 
 import Entity.Entity;
+import Entity.UI.Battle.CardHolder;
 import Main.Game;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class Deck extends Entity {
@@ -12,11 +14,14 @@ public class Deck extends Entity {
     Game game;
     Random rand;
 
+    ArrayList<Card> cards_draw;
+    ArrayList<Card> cards_discard;
     CardHolder card_holder;
 
     String[] card_names = {
             "Rock Throw",
             "Tail Defence",
+            "Dull Claw",
     };
 
     public int deck_size = 5;
@@ -39,6 +44,22 @@ public class Deck extends Entity {
             new_card.getCard(getRandomCardName());
             card_holder.addCard(new_card);
         }
+    }
+
+    public void drawCard() {
+        card_holder.addCard(cards_draw.getFirst());
+        cards_draw.removeFirst();
+    }
+
+    public void discardCard(Card card) {
+        cards_discard.add(card);
+        card_holder.removeCard(card);
+    }
+
+    public void drawHand() {
+        cards_discard.removeAll(cards_draw);
+        cards_draw = cards_discard;
+        Collections.shuffle(cards_draw);
     }
 
     public String getRandomCardName() {

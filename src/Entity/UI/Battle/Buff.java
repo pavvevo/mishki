@@ -1,4 +1,4 @@
-package Entity.UI;
+package Entity.UI.Battle;
 
 import Entity.Entity;
 import Main.Game;
